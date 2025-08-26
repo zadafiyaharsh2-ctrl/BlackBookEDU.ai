@@ -1,0 +1,53 @@
+# AI-Powered JEE/NEET Tutor App
+
+**Copyright (c) 2025 Harsh Ashokbhai Zadapiya — All Rights Reserved**
+
+---
+
+## ⚠️ IMPORTANT NOTICE
+
+This repository contains the proprietary source code, algorithms, AI models, data structures, and documentation of the AI-powered JEE/NEET Tutor App (collectively, "Software").
+
+By accessing this repository, you acknowledge that:
+
+1. The Software is **confidential and proprietary** to Harsh Ashokbhai Zadapiya.
+2. You **may not copy, reproduce, distribute, modify, reverse engineer, or create derivative works** from this Software.
+3. Any unauthorized use, sharing, or disclosure may result in **civil and criminal liability** under copyright, intellectual property, and trade secret laws.
+4. Access to the Software is strictly limited to individuals **bound by a signed Non-Disclosure Agreement (NDA)** with the copyright owner.
+
+---
+
+## 📄 Repository Contents
+
+- **Frontend/** – React or HTML/CSS/JS files for the user interface
+- **Backend/** – Node.js / Flask / Django API files
+- **Data/** – Local storage for exams, PDFs, and reports (confidential)
+- **AI/** – Algorithms and AI models for problem generation, ranking, and student analytics
+- **LICENSE** – Proprietary license terms
+- **README.md** – This file
+
+> **Note:** Do not attempt to share, copy, or deploy any part of this repository without explicit written permission.
+
+---
+
+## 📝 Usage
+
+- Internal evaluation, testing, and prototype development are allowed **only with written permission** from the copyright owner.
+- All AI computations and sensitive algorithms **must remain on the backend**; never expose source code or model logic externally.
+- For collaboration, demonstration, or licensing inquiries, contact:
+
+**Harsh Ashokbhai Zadapiya**  
+Email: [your email here]  
+
+---
+
+## 🔒 Security Recommendations
+
+1. Keep the repository **private** on GitHub, Bitbucket, or GitLab.  
+2. Require **NDAs** for anyone who needs access to the repository.  
+3. Store all sensitive data (exams, PDFs, AI models) locally or on a secure backend; do not upload to public repos.  
+4. Encrypt or protect critical algorithm files if deploying to cloud later.  
+
+---
+
+**Disclaimer:** This README and LICENSE file serve as a legal notice of proprietary rights and are not a substitute for formal legal advice. For complete IP protection, consult a qualified patent or IP attorney.
