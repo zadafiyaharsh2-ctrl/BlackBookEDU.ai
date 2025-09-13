@@ -81,10 +81,17 @@ router.post("/login", async function(req, res){
             { expiresIn: '30d' }
         );
 
-        const status(200).json({
+        res.status(200).json({
             success: true,
             token,
             user: usertoReturn
         });
     }
-})
+    catch (error) {
+        console.error("Login error: ", error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+});
