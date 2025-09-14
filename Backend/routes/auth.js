@@ -66,6 +66,9 @@ router.post("/login", async function(req, res){
             });
         }
 
+        
+        const isMatch = await bcrypt.compare(password.trim() , user.password);
+
         if( !isMatch ){
             console.log("Password mismatch for user.", user._id);
             return res.status(401).json({
@@ -80,6 +83,10 @@ router.post("/login", async function(req, res){
             }, process.env.TOKEN,
             { expiresIn: '30d' }
         );
+
+        const usertoReturn = user.toObject();
+        delete usertoReturn.password;
+
 
         res.status(200).json({
             success: true,
