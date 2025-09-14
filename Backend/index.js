@@ -91,6 +91,7 @@ const JwtStrategy = require('passport-jwt').Strategy,
         }
     }));
 app.use(passport.initialize());
+
 ///  ======================= ROUTES =====================
 
 app.get( "/" , (req, res) => res.send( " Can you see me?" ) );
