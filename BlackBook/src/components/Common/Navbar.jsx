@@ -18,15 +18,18 @@ const Navbar = () => {
     const toggleMobile = () => setMobileOpen(!mobileOpen);
 
   return (
-    <div className='bg-white shadow-md p-4'>
+    <div className='bg-zinc-800 shadow-md px-4 py-3 '>
+      {/* <div className='text-2xl font-bold text-white'>BlackBook</div> */}
+      <div className='flex justify-between items-center '>
+      <h1 className="text-2xl font-bold text-white">BlackBook</h1>
 
 {/* ------------Desktop------------------ */}
-      <ul className='hidden md:flex justify-end space-x-4'>
+      <ul className='hidden md:flex justify-end space-x-4 '>
         {navItems.map((item) => (
           <li key={item.label}>
             <Link 
             to={item.href}
-            className='text-blue-500 hover:underline'
+            className='text-white hover:text-blue-500 font-semibold px-3 py-2 rounded-md hover:scale-105 transition-transform duration-200'
             onClick={() => setMobileOpen(false)}
             >
               {item.label}
@@ -73,7 +76,7 @@ const Navbar = () => {
           ))}
         </ul>
       </div>
-
+      </div>
     </div>
   )
 }
