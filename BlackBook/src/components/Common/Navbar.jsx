@@ -18,7 +18,7 @@ const Navbar = () => {
     const toggleMobile = () => setMobileOpen(!mobileOpen);
 
   return (
-    <div className='bg-zinc-800 shadow-md px-4 py-3 '>
+    <div className='bg-zinc-800 shadow-md px-4 py-3 text-white'>
       {/* <div className='text-2xl font-bold text-white'>BlackBook</div> */}
       <div className='flex justify-between items-center '>
       <h1 className="text-2xl font-bold text-white">BlackBook</h1>
@@ -48,7 +48,7 @@ const Navbar = () => {
           <button
             onClick={toggleMobile}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            className="w-9 h-9 flex items-center justify-center rounded-full shadow  transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-full shadow transition-colors text-white" 
           >
             {mobileOpen ? <X /> : <Menu />}
           </button>
@@ -56,13 +56,13 @@ const Navbar = () => {
 
 
 <div
-        className={`md:hidden absolute top-[68px] left-0 right-0 mx-1 bg-white overflow-hidden z-[90] transition-all duration-300 origin-top ${
+        className={`md:hidden absolute top-[68px] left-0 right-0 mx-1 bg-zinc-800  overflow-hidden z-[90] transition-all duration-300 origin-top ${
           mobileOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'
         }`}
         style={{ backdropFilter: 'blur(6px)' }}
       >
-      
-        <ul className="flex flex-col  gap-2 p-4">
+
+        <ul className="flex flex-col gap-2 p-4 ">
           {navItems.map(item => (
             <li key={item.label}>
               <Link
