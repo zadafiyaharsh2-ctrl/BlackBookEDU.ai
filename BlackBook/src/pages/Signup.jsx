@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from '../utils/api'; 
+import { useCookies } from "react-cookie";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [cookie , setCookie] = useCookies(["token"]);
   const [form, setForm] = useState({
     userName: "",
     email: "",
@@ -50,10 +52,22 @@ const SignUp = () => {
       }
 
       // API call ko edit karlena
-      const res = await api.post("/", form);
+      const res = await api.post("/register", form);
       
       if (res.data && res.data.success) {
-        toast.success("Account created successfully!", {
+      
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 30);
+
+          
+        setCookie("token", res.data.token, {
+                    path: "/",
+                    expires: expirationDate,
+                    secure: true,
+                    sameSite: 'strict'
+                });
+
+        toast.success("Logged in successfully!", {
           position: "top-right",
           autoClose: 3000,
           theme: "colored",
@@ -67,6 +81,8 @@ const SignUp = () => {
           password: "",
         });
         setConfirmPassword("");
+
+        
         
         // Redirect to login page
         setTimeout(() => {

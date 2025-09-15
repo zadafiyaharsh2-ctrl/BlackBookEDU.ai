@@ -8,7 +8,7 @@ import { setAuthFromOutside } from './AuthContext';
  * This makes your requests cleaner: api.get("/users").
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API || 'http://localhost:9000/',
+  baseURL: import.meta.env.VITE_API || 'http://localhost:9090/',
   withCredentials: true,
 });
 

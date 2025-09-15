@@ -1,13 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { CookiesProvider } from 'react-cookie'
+import { AuthProvider } from '../src/utils/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <CookiesProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </CookiesProvider>
   </StrictMode>,
 )

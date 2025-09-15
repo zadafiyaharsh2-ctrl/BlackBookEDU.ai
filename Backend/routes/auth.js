@@ -38,6 +38,29 @@ router.post('/register', async function(req, res){
     return res.status(201).json(usertoReturn);
 });
 
+//=========== will be deleted using for getting data of backend ===
+
+router.get('/users', passport.authenticate('user-jwt', { session: false }), async (req, res) => {
+  try {
+    const countOnly = req.query.count === 'true';
+    let totalUsers = 0;
+    if (countOnly) {
+      totalUsers = await User.countDocuments() ;
+    }
+    const limit = Math.min(parseInt(req.query.limit) || 5, 100);
+    const skip = parseInt(req.query.skip) || 0;
+
+    const users = await User.find({})
+      .select('userName email phone ')
+      .limit(limit)
+      .skip(skip);
+
+    res.json({ totalUsers, users });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 /// =============LOGIN ROUTE=================
