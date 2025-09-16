@@ -18,7 +18,7 @@ const Navbar = () => {
     const toggleMobile = () => setMobileOpen(!mobileOpen);
 
   return (
-    <div className='bg-zinc-800 shadow-md px-4 py-3 text-white'>
+    <div className='bg-zinc-800 sticky top-0 shadow-md px-4 py-3 text-white z-50'>
       {/* <div className='text-2xl font-bold text-white'>BlackBook</div> */}
       <div className='flex justify-between items-center '>
       <h1 className="text-2xl font-bold text-white">BlackBook</h1>
