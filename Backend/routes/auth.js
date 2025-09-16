@@ -8,34 +8,71 @@ const User = require('../models/User');
 
 
 /// =============SIGNUP ROUTE=================
-router.post('/register', async function(req, res){
+// (Removed duplicate/broken register route)
+// ============= REFINED SIGNUP ROUTE =============
+router.post('/register', async function(req, res) {
+    try {
+        let { userName, email, phone, password } = req.body;
 
-    let { userName, email, phone, password} = req.body;
+        if (!phone || phone.trim() === "") phone = undefined;
 
-    if(!phone || phone.trim() === "") phone = undefined;
+        
+        if (!email || !password || !userName) {
+            return res.status(400).json({
+                success: false,
+                message: "Email, password, and userName are required!"
+            });
+        }
 
-    if( !email || !password || !userName )
-        return res.status(400).json({ error: "Email, Password and UserName are required fields" });
+        
+        const existing = await User.findOne({ email });
+        if (existing) {
+            return res.status(409).json({
+                success: false,
+                message: "Email already registered"
+            });
+        }
 
-    const existing = await User.findOne( { email });
-    if(existing) return res.status(409).json({ error: "User with this email already exists" });
+        
+        const existing1 = await User.findOne({ userName });
+        if (existing1) {
+            return res.status(409).json({
+                success: false,
+                message: "userName already taken"
+            });
+        }
 
-    const hashed = await bcrypt.hash(password, 10);
+        
+        const hashed = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({
-        userName,
-        email,
-        ...(phone && { phone}),
-        password: hashed
-    });
+        
+        const newUser = await User.create({
+            userName,
+            email,
+            ...(phone && { phone }),
+            password: hashed
+        });
 
-    const token = await getToken(email, newUser);
+        
+        const token = await getToken(email, newUser);
 
-    const usertoReturn = { ...newUser.toJSON(), token };
+        
+        const usertoReturn = newUser.toObject();
+        delete usertoReturn.password;
 
-    delete usertoReturn.passport;
-
-    return res.status(201).json(usertoReturn);
+        
+        return res.status(201).json({
+            success: true,
+            token,
+            user: usertoReturn
+        });
+    } catch (error) {
+        console.error("Register error: ", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
 });
 
 //=========== will be deleted using for getting data of backend ===
@@ -51,7 +88,7 @@ router.get('/users', passport.authenticate('user-jwt', { session: false }), asyn
     const skip = parseInt(req.query.skip) || 0;
 
     const users = await User.find({})
-      .select('userName email phone ')
+      .select('userName email phone timestamps')
       .limit(limit)
       .skip(skip);
 

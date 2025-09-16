@@ -8,14 +8,13 @@ import { useCookies } from "react-cookie";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [cookie , setCookie] = useCookies(["token"]);
+  const [, setCookie] = useCookies(["token"]);
   const [form, setForm] = useState({
     userName: "",
     email: "",
     phone: "",
     password: "",
   });
-
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -114,6 +113,7 @@ const SignUp = () => {
 
   return (
     <>
+    <div>
      <button
               type="button"
               onClick={() => navigate("/")}
@@ -235,8 +235,8 @@ const SignUp = () => {
           </div>
         </form>
         
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-600">
+        <div className="text-center mt-4"></div>
+          <p className="text-sm text-gray-600"></p>
             Already have an account?{" "}
             <button
               type="button"
@@ -245,10 +245,9 @@ const SignUp = () => {
             >
               Log in
             </button>
-          </p>
+          </div>
         </div>
       </div>
-    </div>
       </>
   );
 };
