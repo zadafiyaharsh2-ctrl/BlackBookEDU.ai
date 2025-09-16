@@ -62,8 +62,6 @@ app.use(cors({
   credentials: true,
 }));
 
-
-
 app.use(helmet());
 
 // Rate Limiting , only for admin/ routes
