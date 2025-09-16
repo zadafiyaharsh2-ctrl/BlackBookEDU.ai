@@ -148,8 +148,8 @@ const SignUp = () => {
     {/* Place your logo, image, and text here */}
     <div className="mb-8">
       {/* Logo and branding */}
-      <img src="/path-to-logo.svg" alt="CodeSquid" className="h-12 mb-4" />
-      <h2 className="text-2xl font-bold mb-2">CodeSquid</h2>
+      <img src="/path-to-logo.svg" alt="BlackBookEdu" className="h-12 mb-4" />
+      <h2 className="text-2xl font-bold mb-2">BlackBookEdu</h2>
     </div>
     <img src="/path-to-illustration.svg" alt="Illustration" className="w-3/4 mb-8" />
     <div className="text-center">
