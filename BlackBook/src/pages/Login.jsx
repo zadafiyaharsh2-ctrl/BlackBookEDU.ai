@@ -87,16 +87,25 @@ const Login = () => {
 
   return (
     <>
-    <button
-              type="button"
-              onClick={() => navigate("/")}
-              className="font-medium text-green-600 hover:text-green-500 cursor-pointer"
-            >
-              Home
-            </button>
+    <div className="min-h-screen flex">
+      {/* Left Panel (Hidden on mobile) */}
+      <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8">
+        <div className="mb-8 flex flex-col items-center">
+          <img src="logo.svg" alt="BlackBookEdu" className="h-12 mb-4" />
+          <h2 className="text-2xl font-bold mb-2">BlackBookEdu</h2>
+        </div>
+        {/* <img src="/path-to-illustration.svg" alt="Illustration" className="w-3/4 mb-8" /> */}
+        <div className="text-center">
+          <h3 className="text-xl font-bold">Online Community For Students & Teachers</h3>
+          <p className="mt-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+        </div>
+      </div>
+      
+    
 
-
-    <div className="min-h-screen flex justify-center items-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+{/* Right Panel (Login Form) */}
+    <div className="flex w-full md:w-1/2 justify-center items-center bg-white p-8">
+      <div className='max-w-md w-full'>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -109,13 +118,22 @@ const Login = () => {
         pauseOnHover
         theme="colored"
       />
+
+      <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="font-medium text-green-600 hover:text-green-500 cursor-pointer"
+            >
+              Home
+            </button>
+
       
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-        <div>
+      
+      
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
             Welcome Back
           </h2>
-        </div>
+    
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
@@ -175,6 +193,8 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </div>
+  
     </>
   );
 };
