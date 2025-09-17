@@ -88,8 +88,37 @@ const Login = () => {
   return (
     <>
     <div className="min-h-screen flex">
-      {/* Left Panel (Hidden on mobile) */}
+
+
+    {/* Back Button */}
+      <div className='absolute top-4 left-4'>
+        <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="flex items-center space-x-2 font-medium px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 shadow-md cursor-pointer"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <span>Back to Home</span>
+            </button>
+      </div>
+
+
+     {/* Left Panel (Hidden on mobile) */}
       <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8">
+        
         <div className="mb-8 flex flex-col items-center">
           <img src="logo.svg" alt="BlackBookEdu" className="h-12 mb-4" />
           <h2 className="text-2xl font-bold mb-2">BlackBookEdu</h2>
@@ -104,7 +133,11 @@ const Login = () => {
     
 
 {/* Right Panel (Login Form) */}
-    <div className="flex w-full md:w-1/2 justify-center items-center bg-white p-8">
+ 
+    <div className="flex w-full md:w-1/2 justify-center items-center p-8">
+      
+
+
       <div className='max-w-md w-full'>
       <ToastContainer
         position="top-right"
@@ -119,13 +152,7 @@ const Login = () => {
         theme="colored"
       />
 
-      <button
-              type="button"
-              onClick={() => navigate("/")}
-              className="font-medium text-green-600 hover:text-green-500 cursor-pointer"
-            >
-              Home
-            </button>
+     
 
       
       

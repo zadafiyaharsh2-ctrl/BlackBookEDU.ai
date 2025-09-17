@@ -114,6 +114,32 @@ const SignUp = () => {
   return (
   <>
     <div className="min-h-screen flex">
+
+        {/* Back Button */}
+      <div className='absolute top-4 left-4'>
+        <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="flex items-center space-x-2 font-medium px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 shadow-md cursor-pointer"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <span>Back to Home</span>
+            </button>
+      </div>
+
       {/* Left Panel (Hidden on mobile) */}
       <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8">
         <div className="mb-8 flex flex-col items-center">
@@ -142,13 +168,7 @@ const SignUp = () => {
             pauseOnHover
             theme="colored"
           />
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="font-medium text-green-600 hover:text-green-500 cursor-pointer mb-6"
-          >
-            Home
-          </button>
+         
           <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
             Create Your Account
           </h2>
