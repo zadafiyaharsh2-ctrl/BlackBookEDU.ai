@@ -8,15 +8,13 @@ const User = require('../models/User');
 
 
 /// =============SIGNUP ROUTE=================
-// (Removed duplicate/broken register route)
-// ============= REFINED SIGNUP ROUTE =============
+
 router.post('/register', async function(req, res) {
     try {
         let { userName, email, phone, password } = req.body;
 
         if (!phone || phone.trim() === "") phone = undefined;
 
-        
         if (!email || !password || !userName) {
             return res.status(400).json({
                 success: false,
