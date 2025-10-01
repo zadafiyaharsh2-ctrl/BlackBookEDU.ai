@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [cookie , setCookie] = useCookies(["token"]);
+  const [, setCookie] = useCookies(["token"]);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -44,12 +44,12 @@ const Login = () => {
           expirationDate.setDate(expirationDate.getDate() + 30);
 
           
-        setCookie("token", res.data.token, {
-                    path: "/",
-                    expires: expirationDate,
-                    secure: true,
-                    sameSite: 'strict'
-                });
+    setCookie("token", res.data.token, {
+          path: "/",
+          expires: expirationDate,
+          secure: window.location.protocol === 'https:',
+          sameSite: 'strict'
+        });
 
         toast.success("Logged in successfully!", {
           position: "top-right",

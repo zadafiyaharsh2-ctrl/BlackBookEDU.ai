@@ -43,6 +43,6 @@ const InstituteSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const Institute = mongoose.model('User', InstituteSchema);
+const Institute = mongoose.model('Institute', InstituteSchema);
 
 module.exports= Institute;

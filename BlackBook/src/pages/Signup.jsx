@@ -59,14 +59,17 @@ const SignUp = () => {
           expirationDate.setDate(expirationDate.getDate() + 30);
 
           
-        setCookie("token", res.data.token, {
-                    path: "/",
-                    expires: expirationDate,
-                    secure: true,
-                    sameSite: 'strict'
-                });
+    setCookie("token", res.data.token, {
+          path: "/",
+          expires: expirationDate,
+          secure: window.location.protocol === 'https:',
+          sameSite: 'strict'
+        });
 
-        toast.success("Logged in successfully!", {
+    // Also store in localStorage for Authorization header-based flows
+    localStorage.setItem('accessToken', res.data.token);
+
+        toast.success("Account created successfully!", {
           position: "top-right",
           autoClose: 3000,
           theme: "colored",
@@ -222,6 +225,7 @@ const SignUp = () => {
                   type="password"
                   autoComplete="new-password"
                   required
+                  minLength={6}
                   value={form.password}
                   onChange={handleChange}
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
@@ -236,6 +240,7 @@ const SignUp = () => {
                   type="password"
                   autoComplete="new-password"
                   required
+                  minLength={6}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"

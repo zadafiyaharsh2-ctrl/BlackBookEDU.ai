@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { getToken, verifyToken } = require("../utils/helper");
 const passport = require('passport');
-const User = require('../models/User');
+const { User } = require('../models/User');
 
 
 /// =============SIGNUP ROUTE=================
@@ -13,12 +13,42 @@ router.post('/register', async function(req, res) {
     try {
         let { userName, email, phone, password } = req.body;
 
-        if (!phone || phone.trim() === "") phone = undefined;
+        // Normalize inputs
+        userName = typeof userName === 'string' ? userName.trim() : '';
+        email = typeof email === 'string' ? email.trim().toLowerCase() : '';
+        phone = typeof phone === 'string' ? phone.trim() : '';
+        password = typeof password === 'string' ? password.trim() : '';
 
-        if (!email || !password || !userName) {
+        // Empty phone should not be stored
+        if (!phone) phone = undefined;
+
+        // Required fields - compute missing for better UX
+        const missing = [];
+        if (!userName) missing.push('userName');
+        if (!email) missing.push('email');
+        if (!password) missing.push('password');
+        if (missing.length) {
             return res.status(400).json({
                 success: false,
-                message: "Email, password, and userName are required!"
+                message: `Missing required field(s): ${missing.join(', ')}`,
+                missing
+            });
+        }
+
+        // Basic email format check
+        const emailOk = /.+@.+\..+/.test(email);
+        if (!emailOk) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email format'
+            });
+        }
+
+        // Basic password policy
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters'
             });
         }
 
@@ -41,11 +71,12 @@ router.post('/register', async function(req, res) {
         }
 
         
-        const hashed = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
         
         const newUser = await User.create({
             userName,
+            name: userName,
             email,
             ...(phone && { phone }),
             password: hashed
@@ -66,6 +97,14 @@ router.post('/register', async function(req, res) {
         });
     } catch (error) {
         console.error("Register error: ", error);
+        // Handle duplicate key from MongoDB just in case race condition
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern || {})[0] || 'field';
+            return res.status(409).json({
+                success: false,
+                message: `${field} already exists`
+            });
+        }
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
@@ -85,8 +124,8 @@ router.get('/users', passport.authenticate('user-jwt', { session: false }), asyn
     const limit = Math.min(parseInt(req.query.limit) || 5, 100);
     const skip = parseInt(req.query.skip) || 0;
 
-    const users = await User.find({})
-      .select('userName email phone timestamps')
+        const users = await User.find({})
+            .select('userName name email phone createdAt updatedAt')
       .limit(limit)
       .skip(skip);
 
@@ -102,7 +141,10 @@ router.get('/users', passport.authenticate('user-jwt', { session: false }), asyn
 
 router.post("/login", async function(req, res){
     try{
-        const {email, password }= req.body;
+        let {email, password }= req.body;
+
+        email = typeof email === 'string' ? email.trim().toLowerCase() : '';
+        password = typeof password === 'string' ? password.trim() : '';
 
         if( !email?.trim() || !password?.trim()){
             return res.status(400).json({
@@ -112,8 +154,7 @@ router.post("/login", async function(req, res){
         }
 
         const user = await User.findOne({
-            email: email.trim()
-            
+            email
         }).select('+password');
 
         if( !user ){
@@ -125,7 +166,7 @@ router.post("/login", async function(req, res){
         }
 
         
-        const isMatch = await bcrypt.compare(password.trim() , user.password);
+    const isMatch = await bcrypt.compare(password , user.password);
 
         if( !isMatch ){
             console.log("Password mismatch for user.", user._id);
