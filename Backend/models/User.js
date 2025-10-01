@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// ================= USER MODEL =================
 const UserSchema = new mongoose.Schema({
   userName: {
     type: String,
@@ -24,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     required: true 
   },
 
+  // Profile extras
+  avatarUrl: String,
+  bio: String,
+
   // Role-based hierarchy
   role: { 
     type: String, 
@@ -41,79 +44,24 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Department", 
     default: null 
-  }
+  },
 
+  // Social/Connections
+  connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // friends/following
+  achievements: [String], // badges, awards, etc.
+
+  // Privacy settings for profile visibility
+  privacySettings: {
+    showScores: { type: Boolean, default: false },
+    showRecentActivity: { type: Boolean, default: true },
+    showBadges: { type: Boolean, default: true },
+    showInstitute: { type: Boolean, default: true },
+  },
+
+  // Subscription plans
+  plans: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plan" }]
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema);
 
-
-// ================= INSTITUTION MODEL =================
-const InstitutionSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true 
-  },
-  type: { 
-    type: String, 
-    enum: ["school", "college", "institute"], 
-    required: true 
-  },
-  dean: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User" 
-  },
-  departments: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Department" 
-  }]
-}, { timestamps: true });
-
-const Institution = mongoose.model("Institution", InstitutionSchema);
-
-
-// ================= DEPARTMENT MODEL =================
-const DepartmentSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true 
-  },
-  institutionId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Institution", 
-    required: true 
-  },
-  hod: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User" 
-  },
-  teachers: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User" 
-  }],
-  students: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User" 
-  }]
-}, { timestamps: true });
-
-const Department = mongoose.model("Department", DepartmentSchema);
-
-
-// ================= WEBAPP ADMIN MODEL =================
-const WebAppAdminSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User", 
-    required: true 
-  },
-  permissions: [{ 
-    type: String 
-  }] 
-}, { timestamps: true });
-
-const WebAppAdmin = mongoose.model("WebAppAdmin", WebAppAdminSchema);
-
-
-// ================= EXPORT MODELS =================
-module.exports = { User, Institution, Department, WebAppAdmin };
+module.exports = User;
