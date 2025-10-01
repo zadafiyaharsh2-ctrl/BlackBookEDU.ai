@@ -87,16 +87,58 @@ const Login = () => {
 
   return (
     <>
-    <button
+    <div className="min-h-screen flex">
+
+
+    {/* Back Button */}
+      <div className='absolute top-4 left-4'>
+        <button
               type="button"
               onClick={() => navigate("/")}
-              className="font-medium text-green-600 hover:text-green-500 cursor-pointer"
+              className="flex items-center space-x-2 font-medium px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 shadow-md cursor-pointer"
             >
-              Home
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <span>Back to Home</span>
             </button>
+      </div>
 
 
-    <div className="min-h-screen flex justify-center items-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+     {/* Left Panel (Hidden on mobile) */}
+      <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8">
+        
+        <div className="mb-8 flex flex-col items-center">
+          <img src="logo.svg" alt="BlackBookEdu" className="h-12 mb-4" />
+          <h2 className="text-2xl font-bold mb-2">BlackBookEdu</h2>
+        </div>
+        {/* <img src="/path-to-illustration.svg" alt="Illustration" className="w-3/4 mb-8" /> */}
+        <div className="text-center">
+          <h3 className="text-xl font-bold">Online Community For Students & Teachers</h3>
+          <p className="mt-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+        </div>
+      </div>
+      
+    
+
+{/* Right Panel (Login Form) */}
+ 
+    <div className="flex w-full md:w-1/2 justify-center items-center p-8">
+      
+
+
+      <div className='max-w-md w-full'>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -109,13 +151,16 @@ const Login = () => {
         pauseOnHover
         theme="colored"
       />
+
+     
+
       
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-        <div>
+      
+      
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
             Welcome Back
           </h2>
-        </div>
+    
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
@@ -175,6 +220,8 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </div>
+  
     </>
   );
 };

@@ -13,14 +13,14 @@ const Pricing = () => {
           <h2 className="text-2xl font-bold mb-4">Free Version</h2>
           <ul className="space-y-3 mb-6 text-gray-300 flex-1">
             <li>✔ Access to chapter one</li>
-            <li className="line-through">✘ Unlimited problem sets</li>
+            <li>✔ Limited problem sets</li>
+            <li>✔ Limited AI guidance</li>
             <li className="line-through">✘ Advanced analytics</li>
             <li className="line-through">✘ every sunday mock test</li>
             <li className="line-through">✘ weak/strong spots analysis</li>
-            <li className="line-through">✘ Ai guidence</li>
             <li className="line-through">✘ leaderboard as problem solver</li>
             <li className="line-through">✘ leaderboard as per mock test</li>
-            <li className="line-through">✘ ranking in community</li>
+            <li className="line-through">✘ Ranking in community</li>
             <li className="line-through">✘ parents Access</li>
           </ul>
           <a
