@@ -7,6 +7,7 @@ import Footer from "../components/Common/Footer";
 import Pricing from "../components/HomeComponents/Pricing";
 
 
+
 const Home = () => {
     return ( 
         <>
@@ -17,6 +18,7 @@ const Home = () => {
         <About />
         {/* <Contact /> */}
         <Footer />
+        
         </div>
         </>
     );
