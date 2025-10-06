@@ -178,7 +178,7 @@ const SignUp = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
-                <label htmlFor="userName" className="sr-only">Full Name</label>
+                <label htmlFor="userName" className="sr-only">User Name</label>
                 <input
                   id="userName"
                   name="userName"
