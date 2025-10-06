@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Common/Navbar';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -52,6 +53,8 @@ const Profile = () => {
   const suggestedMaterials = Array.isArray(dash.suggestedMaterials) ? dash.suggestedMaterials : [];
 
   return (
+    <>
+    <Navbar />
     <div style={{
       background: '#18181c',
       color: '#f5f6fa',
@@ -237,6 +240,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

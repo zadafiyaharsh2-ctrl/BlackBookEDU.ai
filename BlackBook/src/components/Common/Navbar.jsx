@@ -10,6 +10,7 @@ const navItems = [
     { label: 'Contact', href: '/Contact' },
     { label: 'Signup', href: '/Signup' },
     { label: 'Profile' , href: '/Profile' },
+    { label: 'Dashboard' , href: '/Dashboard' },
 ]
 
 const Navbar = () => {

@@ -15,7 +15,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 
-
+// app.use(express.json());
 
 // +======================== IMPORT OF MODELS ==========================
 const { User } = require('./models/User');
@@ -96,6 +96,5 @@ app.use(passport.initialize());
 
 app.get( "/" , (req, res) => res.send( " Can you see me?" ) );
 app.use(authRoutes);
-app.listen( port , () => console.log("App is running on port http://localhost:" + port));
-
 app.use('/contact', contactRoutes);
+app.listen( port , () => console.log("App is running on port http://localhost:" + port));
