@@ -8,6 +8,8 @@ const passport = require("passport");
 // POST /contact/submit
 // Only logged-in users can submit. Identity is fetched from DB.
 router.post('/submit', passport.authenticate("user-jwt" , { session:false }) , async (req, res) => {
+      console.log('Authorization header:', req.headers.authorization);
+  console.log('Decoded user:', req.user);
   try {
     // Only accept subject and message from client
     const subject = req.body.subject?.trim();
