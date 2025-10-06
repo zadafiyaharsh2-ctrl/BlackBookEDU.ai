@@ -5,20 +5,30 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
+import { useCookies } from 'react-cookie';
 
 
 const App = () => {
+  const [cookie , setCookie] = useCookies(["token"]);
+
   return (
     <div>
       <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path='/Contact' element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<Home />} />
-        </Routes>
+        {cookie.token ? (
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path='/Contact' element={<Contact />} />
+                <Route path="*" element={<Home />} />
+              </Routes>
+            ) : (
+              <Routes>
+                <Route path="/home" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="*" element={<Navigate to="/login" />} />
+              </Routes>
+            )}
       </Router>
     </div>
   )

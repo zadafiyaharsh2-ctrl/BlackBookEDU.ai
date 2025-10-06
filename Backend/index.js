@@ -18,7 +18,7 @@ const csrf = require("csurf");
 // app.use(express.json());
 
 // +======================== IMPORT OF MODELS ==========================
-const { User } = require('./models/User');
+const User = require('./models/User');
 
 
 // ========================== IMPORT OF ROUTES =========================

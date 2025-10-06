@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Contact = require('../models/contact');
-const User = require('../models/User'); // Make sure this path matches your project
+const Contact = require("../models/Contact.js");
+const User = require("../models/User.js");
 const passport = require("passport");
 
 
@@ -21,7 +21,7 @@ router.post('/submit', passport.authenticate("user-jwt" , { session:false }) , a
     }
 
     // Fetch the full user to attach identity fields to the contact record
-    const user = await User.findOne(req.user.id).select(' userName email phone');
+    const user = await User.findById(req.user.id).select('userName email phone');
     if (!user) {
       return res.status(401).json({ success: false, message: 'User not found or unauthorized.' });
     }

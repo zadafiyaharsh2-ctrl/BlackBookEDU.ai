@@ -10,20 +10,12 @@ const contactSchema = new mongoose.Schema(
       index: true,
     },
 
-    firstName: {
+    userName: {
       type: String,
-      required: [true, 'First name is required'],
+      required: [true, 'User name is required'],
       trim: true,
-      minlength: [2, 'First name must be at least 2 characters'],
-      maxlength: [100, 'First name must be less than 100 characters'],
-    },
-
-    lastName: {
-      type: String,
-      required: [true, 'Last name is required'],
-      trim: true,
-      minlength: [2, 'Last name must be at least 2 characters'],
-      maxlength: [100, 'Last name must be less than 100 characters'],
+      minlength: [2, 'User name must be at least 2 characters'],
+      maxlength: [100, 'User name must be less than 100 characters'],
     },
 
     email: {
