@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/User");
+const User = require("../models/User");
 const mongoose = require("mongoose");
 
 // Helper: issue JWT with user role and org/dept info
@@ -15,7 +15,7 @@ function issueJwt(user) {
       institutionId: user.institutionId,
       departmentId: user.departmentId
     },
-    process.env.TOKEN_VALUE,
+    process.env.TOKEN,
     { expiresIn: "30d" }
   );
 }
@@ -36,7 +36,7 @@ function authenticate(req, res, next) {
   if (!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ message: 'No token.' });
   const token = auth.split(' ')[1];
   try {
-    const payload = jwt.verify(token, process.env.TOKEN_VALUE);
+    const payload = jwt.verify(token, process.env.TOKEN);
     req.user = payload;
     next();
   } catch {
@@ -46,8 +46,8 @@ function authenticate(req, res, next) {
 
 // --- SIGNUP ---
 router.post("/register", async (req, res) => {
-  let { userName, name, email, phone, password, role, institutionId, departmentId } = req.body;
-  if (!userName || !name || !email || !password)
+  let { userName, email, phone, password, role, institutionId, departmentId } = req.body;
+  if (!userName  || !email || !password)
     return res.status(400).json({ message: "Missing required fields." });
 
   // Assign default role if not provided
@@ -63,7 +63,6 @@ router.post("/register", async (req, res) => {
 
   const newUser = await User.create({
     userName,
-    name,
     email,
     phone,
     password: hashed,
@@ -81,8 +80,8 @@ router.post("/register", async (req, res) => {
 // --- LOGIN (by email, role auto-included in JWT) ---
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
-  email = typeof email === 'string' ? email.trim().toLowerCase() : '';
-  password = typeof password === 'string' ? password.trim() : '';
+  // email = typeof email === 'string' ? email.trim().toLowerCase() : '';
+  // password = typeof password === 'string' ? password.trim() : '';
   if (!email || !password)
     return res.status(400).json({ message: "Email and password required." });
 
@@ -108,7 +107,7 @@ router.get("/me", authenticate, async (req, res) => {
 // --- EDIT PROFILE (only self, or admin for others) ---
 router.put("/me", authenticate, async (req, res) => {
   const updateFields = {};
-  ["phone", "name", "avatarUrl", "bio"].forEach(field => {
+  ["phone", "avatarUrl", "bio"].forEach(field => {
     if (req.body[field]) updateFields[field] = req.body[field];
   });
   const user = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
@@ -137,18 +136,18 @@ router.post("/change-password", authenticate, async (req, res) => {
 });
 
 // --- ADMIN ONLY: GET ALL USERS ---
-router.get("/users", authenticate, requireRole("webappAdmin", "dean"), async (req, res) => {
-  const users = await User.find().select("userName name email phone role institutionId departmentId createdAt updatedAt");
+router.get("/users", authenticate, requireRole("webappAdmin", "dean" , "student"), async (req, res) => {
+  const users = await User.find().select("userName email phone role institutionId departmentId createdAt updatedAt");
   res.json({ users });
 });
 
 // --- GET USERS IN ORGANIZATION/DEPARTMENT (hod/dean/admin) ---
 router.get("/org/:orgId/users", authenticate, requireRole("webappAdmin", "dean", "hod"), async (req, res) => {
-  const users = await User.find({ institutionId: req.params.orgId }).select("userName name email phone role departmentId");
+  const users = await User.find({ institutionId: req.params.orgId }).select("userName email phone role departmentId");
   res.json({ users });
 });
 router.get("/dept/:deptId/users", authenticate, requireRole("webappAdmin", "dean", "hod", "teacher"), async (req, res) => {
-  const users = await User.find({ departmentId: req.params.deptId }).select("userName name email phone role");
+  const users = await User.find({ departmentId: req.params.deptId }).select("userName email phone role");
   res.json({ users });
 });
 
