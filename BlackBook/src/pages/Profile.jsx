@@ -1,11 +1,14 @@
 import React from 'react'
-// import Navbar from '../components/DashboardComponents/Navbar';
+import Navbar from '../components/DashboardComponents/Navbar';
 // import Footer from '../components/Common/Footer';
 import HeatMap from '../components/ProfileComponents/HeatMap';
 
 const profile = () =>{
   return (
     <>
+    <div className=''>
+    <Navbar />
+  </div>    
     <div className='min-h-screen flex flex-col bg-zinc-900 text-white'>
        <div className='profile-page bg-blue-600 p-6 mt-4 mx-4 rounded-lg shadow-lg md:flex flex-col justify-between md:flex-row items-center md:items-start'>
         <div className='user-image mb-4 max-w-1/6 mx-auto md:mx-0 md:mr-6 md:flex-1'>
