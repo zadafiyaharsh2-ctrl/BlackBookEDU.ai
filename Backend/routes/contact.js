@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Contact } = require('../models/contact');
+const  Contact  = require('../models/contact');
 
 
 // const { verifyToken } = require("../utils/helper");
 
-router.post('/contact', async (req,res) =>{
+router.post('/submit', async (req,res) =>{
     try{
         const { firstName , lastName, email, phone, subject, message }  = req.body;
 
-        if ( !firstName || !lastName || !email || !phone || !subject || !message ) {
+        if ( !firstName || !lastName || !email || !subject || !message ) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -17,7 +17,7 @@ router.post('/contact', async (req,res) =>{
         }
 
         const newContactMessage = await Contact.create({
-            userId: req.user._id,
+            // userId: req.user._id,
             firstName,
             lastName,
             email,
