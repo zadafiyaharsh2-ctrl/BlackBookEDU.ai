@@ -58,6 +58,7 @@ router.post("/register", async (req, res) => {
   // Uniqueness checks
   if (await User.findOne({ email })) return res.status(409).json({ message: "Email already registered." });
   if (await User.findOne({ userName })) return res.status(409).json({ message: "userName already taken." });
+  if (await User.findOne({ phone }) || phone === undefined ) return res.status(409).json({ message: "phone already taken." });
 
   const hashed = await bcrypt.hash(password, 10);
 
