@@ -5,7 +5,7 @@ const { Contact } = require('../models/contact');
 
 // const { verifyToken } = require("../utils/helper");
 
-router.post('/submit', async (req,res) =>{
+router.post('/contact', async (req,res) =>{
     try{
         const { firstName , lastName, email, phone, subject, message }  = req.body;
 
