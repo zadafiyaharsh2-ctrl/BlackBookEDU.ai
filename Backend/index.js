@@ -15,7 +15,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 
-
+// app.use(express.json());
 
 // +======================== IMPORT OF MODELS ==========================
 const { User } = require('./models/User');
