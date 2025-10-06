@@ -19,7 +19,9 @@ const Navbar = () => {
 
     <div className='bg-zinc-800 sticky top-0 shadow-md px-4 py-3 text-white z-50'>
       <div className='flex justify-between items-center '>
-      <h1 className='text-2xl font-bold text-white'>BlackBook</h1>
+        <Link to="/">
+          <h1 className='text-2xl font-bold text-white'>BlackBookEDU</h1>
+        </Link>
 
      {/* Desktop Navigation */}
      <ul className='hidden md:flex justify-end space-x-4'>
