@@ -35,15 +35,16 @@ const [responseMessage, setResponseMessage] = useState(''); // To show success/e
     try {
       const token = localStorage.getItem('token');
 
-      const response = await axios.post(
+      // const response = 
+      await axios.post(
         'http://localhost:9090/contact/submit',
         formData,
-        // {
-        //         headers: {
-        //             // Include the token in the Authorization header
-        //             'Authorization': `Bearer ${token}`
-        //         }
-        //     }
+        {
+                headers: {
+                    // Include the token in the Authorization header
+                    'Authorization': `Bearer ${token}`
+                }
+            }
 
         
       );
