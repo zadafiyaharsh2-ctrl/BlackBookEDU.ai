@@ -122,7 +122,7 @@ const SignUp = () => {
       <div className='absolute top-4 left-4'>
         <button
               type="button"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
               className="flex items-center space-x-2 font-medium px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 shadow-md cursor-pointer"
             >
               <svg 
