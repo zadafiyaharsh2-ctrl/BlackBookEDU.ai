@@ -11,16 +11,26 @@ function getToken(email , user){
     );
 };
 
-const verifyToken = (req, res , next) => {
-    const authHeader = req.headers.authorization;
-    if(!authHeader) return res.status(401).json( { message : "No token provided"});
-    
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.TOKEN , (err, decoded) => {
-        if(err) return res.status(403).json({ message : "Invalid token"});
+const verifyToken = (req, res, next) => {
+  let token;
+
+  // Try Authorization header first
+  if (req.headers.authorization?.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  // Try cookie fallback
+  if (!token && req.cookies?.token) {
+    token = req.cookies.token;1
+  }
+
+  if (!token) return res.status(401).json({ message: "No token provided" });
+
+  jwt.verify(token, process.env.TOKEN, (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
     req.user = decoded;
     next();
-    });
+  });
 };
 
 

@@ -1,24 +1,14 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import Navbar from '../components/Common/Navbar';
 import Footer from '../components/Common/Footer';
 import api from '../utils/api';
-
-function getCookie(name) {
-  const m = document.cookie.match(new RegExp('(^|; )' + name + '=([^;]+)'));
-  return m ? decodeURIComponent(m[2]) : null;
-}
+import { useAuth } from '../utils/AuthContext';
 
 const Contact = () => {
-  const navigate = useNavigate();
+  const { isAuthenticated, authLoading } = useAuth();
   const [form, setForm] = useState({ subject: 'General Inquiry', message: '' });
   const [loading, setLoading] = useState(false);
   const [resp, setResp] = useState(null);
-
-  const isAuthed = useMemo(
-    () => Boolean(localStorage.getItem('accessToken') || getCookie('token')),
-    []
-  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,9 +19,8 @@ const Contact = () => {
     e.preventDefault();
     setResp(null);
 
-    if (!isAuthed) {
-      setResp({ type: 'error', message: 'Please log in to send a message.' });
-      setTimeout(() => navigate('/login'), 800);
+    if (!isAuthenticated) {
+      setResp({ type: 'error', message: 'You must be logged in to submit the form.' });
       return;
     }
 
@@ -41,12 +30,13 @@ const Contact = () => {
         subject: (form.subject || '').trim(),
         message: (form.message || '').trim(),
       };
-      const { data } = await api.post('/users/contact/submit', payload);
+      const { data } = await api.post('/contact/submit', payload);
       setResp({ type: 'success', message: data?.message || 'Message sent!' });
       setForm({ subject: 'General Inquiry', message: '' });
     } catch (error) {
-      const msg = error.response?.data?.message || 'An error occurred. Please try again.';
+      const msg = error?.response?.data?.message || 'An error occurred. Please try again.';
       setResp({ type: 'error', message: msg });
+      console.error('Contact submit error:', error);
     } finally {
       setLoading(false);
     }
@@ -71,12 +61,17 @@ const Contact = () => {
 
           <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-6">
             {resp && (
-              <div className={`p-4 mb-4 text-sm ${resp.type === 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'} rounded-lg`} role="alert">
+              <div
+                className={`p-4 mb-4 text-sm ${
+                  resp.type === 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'
+                } rounded-lg`}
+                role="alert"
+              >
                 {resp.message}
               </div>
             )}
 
-            {!isAuthed && (
+            {!authLoading && !isAuthenticated && (
               <div className="p-3 text-sm text-yellow-800 bg-yellow-100 rounded">
                 You must be logged in to submit the form.
               </div>
@@ -96,6 +91,7 @@ const Contact = () => {
                         checked={form.subject === s.value}
                         onChange={handleChange}
                         className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                        disabled={!isAuthenticated}
                       />
                       <span className="ml-2 text-sm text-gray-900">{s.label}</span>
                     </label>
@@ -116,12 +112,17 @@ const Contact = () => {
                   rows="6"
                   className="w-full p-3 border border-gray-300 rounded-md resize-none focus:ring-blue-500 focus:border-blue-500"
                   required
+                  disabled={!isAuthenticated}
                 />
               </div>
             </div>
 
             <div className="text-center">
-              <button type="submit" className="bg-black text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:opacity-60" disabled={loading || !isAuthed}>
+              <button
+                type="submit"
+                className="bg-black text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:opacity-60"
+                disabled={loading || !isAuthenticated}
+              >
                 {loading ? 'Sending...' : 'Send Message'}
               </button>
             </div>
