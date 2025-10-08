@@ -24,8 +24,6 @@ const User = require('./models/User');
 // ========================== IMPORT OF ROUTES =========================
 const authRoutes = require('./routes/auth');
 
-// ========================== IMPORT OF CONTACT ROUTES =========================
-const contactRoutes = require('./routes/contact');
 
 
 ///=============================== DATABASE =============================
@@ -56,7 +54,7 @@ mongoose.connect(
 
 app.use(cors({
   origin: ["http://localhost:5173", "http://localhost:5174"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"  ],
 }));
@@ -98,5 +96,4 @@ app.use(passport.initialize());
 
 app.get( "/" , (req, res) => res.send( " Can you see me?" ) );
 app.use(authRoutes);
-app.use('/contact', contactRoutes);
 app.listen( port , () => console.log("App is running on port http://localhost:" + port));
