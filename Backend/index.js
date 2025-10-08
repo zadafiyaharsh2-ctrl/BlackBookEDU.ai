@@ -18,12 +18,12 @@ const csrf = require("csurf");
 // app.use(express.json());
 
 // +======================== IMPORT OF MODELS ==========================
-const User = require('./models/User');
+// const User = require('./models/User');
 
 
 // ========================== IMPORT OF ROUTES =========================
 const authRoutes = require('./routes/auth');
-
+const userRoutes = require('./routes/user');
 // ========================== IMPORT OF CONTACT ROUTES =========================
 // const contactRoutes = require('./routes/contact');
 
@@ -64,7 +64,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded( { extended:true } ));
 app.use(cookieParser());
-
 
 app.use(helmet());
 
