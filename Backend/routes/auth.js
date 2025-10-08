@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 const Contact = require("../models/Contact");
+const passport = require("passport");
 
 // Helper: issue JWT with user role and org/dept info
 function issueJwt(user) {
@@ -106,7 +107,7 @@ router.get("/me", authenticate, async (req, res) => {
   res.json(user);
 });
 
-router.post("/contact", authenticate, async (req, res) => {
+router.post("/contact", passport.authenticate("user-jwt" , { session:false }) ,  async (req, res) => {
   const { subject, message } = req.body;
 
   if (!subject || !message) {
