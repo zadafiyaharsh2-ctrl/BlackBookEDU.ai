@@ -23,7 +23,6 @@ const csrf = require("csurf");
 
 // ========================== IMPORT OF ROUTES =========================
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
 // ========================== IMPORT OF CONTACT ROUTES =========================
 // const contactRoutes = require('./routes/contact');
 
@@ -97,5 +96,4 @@ app.use(passport.initialize());
 
 app.get( "/" , (req, res) => res.send( " Can you see me?" ) );
 app.use(authRoutes);
-// app.use('/contact', contactRoutes);
 app.listen( port , () => console.log("App is running on port http://localhost:" + port));
