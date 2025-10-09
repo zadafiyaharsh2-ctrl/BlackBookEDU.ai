@@ -1,148 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/AuthComponents/Navbar';
-import HeatMap from '../../components/ProfileComponents/HeatMap';
 
-const Profile = () => {
-  // State to hold user data
-  const [userData, setUserData] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    institute: '',
-    rank: '',
-    instituteRank: '',
-    imageUrl: '/me.jpg', // Default image
-  });
+const ProfilePage = () => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  // State to toggle between view and edit mode
-  const [isEditMode, setIsEditMode] = useState(false);
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await axios.get('http://localhost:9090/api/user/profile');
+                setUser(res.data);
+            } catch (err) {
+                console.error('Error fetching user profile:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, []);
 
-  // Fetch user data when the component mounts
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // IMPORTANT: Replace with your actual API endpoint
-        const response = await fetch('/api/user/profile');
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        // Handle error, e.g., show a notification to the user
-      }
-    };
-
-    fetchUserData();
-  }, []); // The empty dependency array ensures this runs only once on mount
-
-  // Handle changes in the input fields during edit mode
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle saving the updated data
-  const handleSave = async () => {
-    try {
-      // IMPORTANT: Replace with your actual API endpoint
-      const response = await fetch('/api/user/profile', {
-        method: 'PUT', // Or 'PATCH'
-        headers: {
-          'Content-Type': 'application/json',
-          // If you use token-based auth, include the token here
-          // 'Authorization': `Bearer ${your_auth_token}`,
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-
-      // Exit edit mode on successful save
-      setIsEditMode(false);
-      // Optionally, you can re-fetch data here if the backend returns the updated object
-      // const updatedData = await response.json();
-      // setUserData(updatedData);
-
-    } catch (error) {
-      console.error("Error saving user data:", error);
-       // Handle error, e.g., show a notification to the user
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+                <div className="text-white text-xl">Loading...</div>
+            </div>
+        );
     }
-  };
 
-  return (
-    <>
-      <div className=''>
-        <Navbar />
-      </div>
-      <div className='min-h-screen flex flex-col bg-zinc-900 text-white'>
-        <div className='profile-page bg-blue-600 p-6 mt-4 mx-4 rounded-lg shadow-lg md:flex md:items-start'>
-          <div className='user-image mb-4 max-w-1/6 mx-auto md:mx-0 md:mr-6 md:flex-1'>
-            <img src={userData.imageUrl} alt='User' className='w-full h-auto rounded-xl' />
-          </div>
-
-          <div className='flex-1'>
-            {isEditMode ? (
-              // EDIT MODE VIEW
-              <div className='user-info flex flex-col text-left bg-gray-700 p-4 rounded-lg'>
-                <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Full Name</label>
-                  <input type="text" name="fullName" value={userData.fullName} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                 <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Username</label>
-                  <input type="text" name="username" value={userData.username} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                 <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Email</label>
-                  <input type="email" name="email" value={userData.email} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                 <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Institute</label>
-                  <input type="text" name="institute" value={userData.institute} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                 <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Rank</label>
-                  <input type="text" name="rank" value={userData.rank} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                 <div className='mb-2'>
-                  <label className='text-sm font-semibold'>Institute Rank</label>
-                  <input type="text" name="instituteRank" value={userData.instituteRank} onChange={handleInputChange} className="w-full p-2 rounded text-black"/>
-                </div>
-                <div>
-                  <button onClick={handleSave} className='mt-4 mr-2 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600'>Save</button>
-                  <button onClick={() => setIsEditMode(false)} className='mt-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600'>Cancel</button>
-                </div>
-              </div>
-            ) : (
-              // DISPLAY MODE VIEW
-              <div>
-                <div className='user-info flex flex-col text-center bg-red-400 p-4 rounded-lg md:text-left'>
-                  <h2 className='text-xl font-semibold'>{userData.fullName || 'Full Name'}</h2>
-                  <p className='text-sm text-gray-300 mb-2'>@{userData.username || 'username'}</p>
-                  <h4 className='text-lg font-medium mt-4'>Email: <span className='font-normal'>{userData.email}</span></h4>
-                  <h4 className='text-lg font-medium mt-4'>Institute: <span className='font-normal'>{userData.institute}</span></h4>
-                  <h4 className='text-lg font-medium mt-4'>Rank: <span className='font-normal'>{userData.rank}</span></h4>
-                  <h4 className='text-lg font-medium mt-4'>Institute Rank: <span className='font-normal'>{userData.instituteRank}</span></h4>
-                </div>
-                <button onClick={() => setIsEditMode(true)} className='mt-4 bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-600'>
-                  Edit Profile
-                </button>
-              </div>
-            )}
-          </div>
+    const renderDetail = (label, value) => (
+        <div className="grid grid-cols-3 gap-4 items-center">
+            <h3 className="text-gray-400 font-semibold col-span-1">{label}</h3>
+            <p className="text-white col-span-2">{value || 'Not provided'}</p>
         </div>
+    );
 
-        <HeatMap />
-      </div>
-    </>
-  );
+    return (
+        <div className="min-h-screen bg-gray-900 text-white font-sans">
+            <Navbar />
+            <div className="container mx-auto p-4 md:p-8">
+                <div className="relative">
+                    {/* Header with Background Image */}
+                    <div
+                        className="h-48 md:h-64 bg-cover bg-center rounded-t-lg"
+                        style={{ backgroundImage: "url('https://4kwallpapers.com/images/walls/thumbs_2t/24066.jpg')" }}
+                    >
+                        <div className="absolute inset-0 bg-black opacity-50 rounded-t-lg"></div>
+                    </div>
+
+                    {/* Profile Picture and Name */}
+                    <div className="relative flex flex-col md:flex-row items-center md:items-end p-4 md:p-6 space-y-4 md:space-y-0 md:space-x-6 -mt-20 md:-mt-24">
+                        {user?.imageUrl ? (
+                            <img
+                                src={user.imageUrl}
+                                alt="Profile"
+                                className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-full border-4 border-gray-800 shadow-lg"
+                            />
+                        ) : (
+                            <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-700 rounded-full border-4 border-gray-800 flex items-center justify-center shadow-lg">
+                                <span className="text-gray-400">No Image</span>
+                            </div>
+                        )}
+                        <div className="text-center md:text-left">
+                            <h1 className="text-2xl md:text-4xl font-bold text-white">{user?.fullname}</h1>
+                            <p className="text-gray-400 text-sm md:text-base">@{user?.username}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* User Details Card */}
+                <div className="bg-gray-800 p-6 rounded-b-lg md:rounded-lg shadow-xl mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        {renderDetail('Email', user?.email)}
+                        {renderDetail('Institute', user?.institute)}
+                        {renderDetail('Rank', user?.rank || 'N/A')}
+                        {renderDetail('Institute Rank', user?.instituteRank || 'N/A')}
+                        <div className="md:col-span-2">
+                             {renderDetail('Bio', user?.bio || 'N/A')}
+                        </div>
+                    </div>
+                    <div className="mt-8 text-right">
+                        <Link
+                            to="/settings"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                        >
+                            Edit Profile
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-export default Profile;
+export default ProfilePage;

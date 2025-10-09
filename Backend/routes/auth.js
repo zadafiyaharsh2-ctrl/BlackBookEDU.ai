@@ -101,11 +101,26 @@ router.post("/login", async (req, res) => {
 });
 
 // --- GET OWN PROFILE ---
-router.get("/me", authenticate, async (req, res) => {
-  const user = await User.findById(req.user.id).select('-password');
-  if (!user) return res.status(404).json({ message: "User not found." });
-  res.json(user);
-});
+// router.get("/me", authenticate, async (req, res) => {
+//   const user = await User.findById(req.user.id).select('-password');
+//   if (!user) return res.status(404).json({ message: "User not found." });
+//   res.json(user);
+// });
+
+
+// router.get('/profile', async ( req, res) => {
+//   try {
+//     let user = await User.findById('main_user');
+//     if(!user){
+//       user = new User();
+//       await user.save();
+//     }
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).send('Server Error ');
+//   }
+// });
+
 
 router.post("/contact", passport.authenticate("user-jwt" , { session:false }) ,  async (req, res) => {
   const { subject, message } = req.body;
@@ -130,14 +145,30 @@ router.post("/contact", passport.authenticate("user-jwt" , { session:false }) , 
 });
 
 // --- EDIT PROFILE (only self, or admin for others) ---
-router.put("/me", authenticate, async (req, res) => {
-  const updateFields = {};
-  ["phone", "avatarUrl", "bio"].forEach(field => {
-    if (req.body[field]) updateFields[field] = req.body[field];
-  });
-  const user = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
-  res.json(user);
-});
+// router.put("/me", authenticate, async (req, res) => {
+//   const updateFields = {};
+//   ["userName", "email", "phone", "avatarUrl", "bio"].forEach(field => {
+//     if (req.body[field]) updateFields[field] = req.body[field];
+//   });
+//   const user = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
+//   res.json(user);
+// });
+
+
+// router.put('/profile', async (req, res) => {
+//   const { name, email, phone, avatarUrl, bio } = req.body;
+//   try{
+//     let user = await User.findByIdAndUpdate('main_user',
+//       { name, email , phone, avatarUrl, bio },
+//       { new:true , user: true}
+//     );
+//     res.json(user);
+
+    
+//   }catch(err){
+//     res.status(500).send('Server Error');
+//   }
+// });
 
 // --- GET USER PROFILE BY ID (public, privacy-aware) ---
 router.get("/get/user/:userId", authenticate, async (req, res) => {
