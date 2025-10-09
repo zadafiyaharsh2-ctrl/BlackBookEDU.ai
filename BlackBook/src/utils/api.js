@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
       // Only attempt /admin/token if user is admin
       const role = getUserRole();
-      if (role === 'admin' || role === 'webappAdmin') {
+      if (role === 'admin' || role === "student") {
         try {
           const { data } = await api.post('/admin/token');
           localStorage.setItem('accessToken', data.accessToken);

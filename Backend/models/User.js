@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
   // Role-based hierarchy
   role: { 
     type: String, 
-    enum: ["webappAdmin", "dean", "hod", "teacher", "student", "normalUser"], 
+    enum: ["admin", "dean", "hod", "teacher", "student", "normalUser"], 
     default: "student" 
   },
 
