@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const Contact = require("../models/Contact");
+const passport = require("passport");
 
 // Helper: issue JWT with user role and org/dept info
 function issueJwt(user) {
@@ -119,6 +121,28 @@ router.post("/login", async (req, res) => {
 //   }
 // });
 
+
+router.post("/contact", passport.authenticate("user-jwt" , { session:false }) ,  async (req, res) => {
+  const { subject, message } = req.body;
+
+  if (!subject || !message) {
+    return res.status(400).json({ message: "Subject and message are required" });
+  }
+
+  try {
+    const contact = new Contact({
+      user: req.user._id,
+      subject,
+      message,
+    });
+
+    const savedMessage = await contact.save();
+    res.status(201).json(savedMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // --- EDIT PROFILE (only self, or admin for others) ---
 // router.put("/me", authenticate, async (req, res) => {

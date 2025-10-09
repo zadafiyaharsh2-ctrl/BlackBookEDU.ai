@@ -106,6 +106,43 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: null
     }
+  // Profile extras
+  avatarUrl: String,
+  bio: String,
+
+  // Role-based hierarchy
+  role: { 
+    type: String, 
+    enum: ["admin", "dean", "hod", "teacher", "student", "normalUser"], 
+    default: "student" 
+  },
+
+  // Relations
+  institutionId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Institution", 
+    default: null 
+  },
+  departmentId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Department", 
+    default: null 
+  },
+
+  // Social/Connections
+  connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // friends/following
+  achievements: [String], // badges, awards, etc.
+
+  // Privacy settings for profile visibility
+  privacySettings: {
+    showScores: { type: Boolean, default: false },
+    showRecentActivity: { type: Boolean, default: true },
+    showBadges: { type: Boolean, default: true },
+    showInstitute: { type: Boolean, default: true },
+  },
+
+  // Subscription plans
+  plans: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plan" }]
 }, { timestamps: true });
 // Ensure only one document exists with the fixed ID
 // UserSchema.index({ _id: 1 }, { unique: true });
