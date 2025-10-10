@@ -95,14 +95,28 @@ router.post("/login", async (req, res) => {
   res.status(200).json({ success: true, token, user: userToReturn });
 });
 
-router.post("/contact/submit" , authenticate , async (req,res) => {
 
-  const { subject, message } = req.body;
 
-  if (!subject || !message) {
-    return res.status(400).json({ message: "Subject and message are required" });
-  }                   
+// --- GET OWN PROFILE ---
+router.get("/me", authenticate, async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password');
+  if (!user) return res.status(404).json({ message: "User not found." });
+  res.json(user);
 });
+
+
+// router.get('/profile', async ( req, res) => {
+//   try {
+//     let user = await User.findById('main_user');
+//     if(!user){
+//       user = new User();
+//       await user.save();
+//     }
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).send('Server Error ');
+//   }
+// });
 
 
 router.post("/contact", authenticate ,  async (req, res) => {
