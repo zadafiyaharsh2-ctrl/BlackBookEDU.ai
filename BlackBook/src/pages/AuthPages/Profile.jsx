@@ -48,7 +48,7 @@ const ProfilePage = () => {
                 // Set some mock data on error to see the layout
                 setUser({
                     fullname: "Deepesh (Error) ",
-                    username: "deepesh123 Error",
+                    userName: "deepesh123 Error",
                     email: "deepesh@example.com",
                     institute: "IIIT Surat",
                     rank: "125",

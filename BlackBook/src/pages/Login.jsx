@@ -50,6 +50,7 @@ const Login = () => {
           secure: window.location.protocol === 'https:',
           sameSite: 'strict'
         });
+        localStorage.setItem("accessToken", res.data.token);
 
         toast.success("Logged in successfully!", {
           position: "top-right",
