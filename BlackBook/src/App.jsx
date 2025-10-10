@@ -16,7 +16,7 @@ import { useCookies } from 'react-cookie';
 
 
 const App = () => {
-  const [cookie , setCookie] = useCookies(["token"]);
+  const [cookie , ] = useCookies(["token"]);
 
   return (
     <div>
@@ -36,7 +36,7 @@ const App = () => {
               </Routes>
             ) : (
               <Routes>
-                <Route path="/home" element={<Home />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="*" element={<Navigate to="/login" />} />

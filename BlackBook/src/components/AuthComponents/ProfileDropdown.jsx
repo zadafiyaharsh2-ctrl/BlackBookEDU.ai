@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const navItems = [
     { label: 'Profile', path: '/profile' },
@@ -12,6 +13,8 @@ const ProfileDropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
+    const [ , , removeCookie] = useCookies(["token"]);
+
 
     // This effect handles clicks outside the component to close the dropdown
     useEffect(() => {
@@ -29,7 +32,9 @@ const ProfileDropdown = () => {
    const handleLogout = () => {
     // Set the cookie's expiration date to the past to delete it
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
+    removeCookie("token", { path: '/' });
+
+    localStorage.removeItem("token");
     // Redirect the user
     navigate('/home');
 }
