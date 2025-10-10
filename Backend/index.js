@@ -68,6 +68,13 @@ app.use(helmet());
 
 // Rate Limiting , only for admin/ routes
 
+const adminLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+app.use('/admin', adminLimiter);
 
 
 
@@ -91,6 +98,16 @@ const JwtStrategy = require('passport-jwt').Strategy,
         }
     }));
 app.use(passport.initialize());
+
+passport.use('admin-jwt', new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+        const admin = await Admin.findById(jwt_payload.id);
+        if (admin) return done(null, admin);
+        return done(null, false);
+    } catch (err) {
+        return done(err, false);
+    }
+}));
 
 ///  ======================= ROUTES =====================
 

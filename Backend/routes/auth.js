@@ -3,9 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const mongoose = require("mongoose");
 const Contact = require("../models/Contact");
-const passport = require("passport");
 
 // Helper: issue JWT with user role and org/dept info
 function issueJwt(user) {
@@ -55,9 +53,6 @@ router.post("/register", async (req, res) => {
   // Assign default role if not provided
   role = role || "student";
 
-  // Optionally: auto-assign role based on email domain or invite code logic here
-
-  // Uniqueness checks
   if (await User.findOne({ email })) return res.status(409).json({ message: "Email already registered." });
   if (await User.findOne({ userName })) return res.status(409).json({ message: "userName already taken." });
   if (await User.findOne({ phone }) || phone === undefined ) return res.status(409).json({ message: "phone already taken." });
@@ -100,29 +95,17 @@ router.post("/login", async (req, res) => {
   res.status(200).json({ success: true, token, user: userToReturn });
 });
 
-// --- GET OWN PROFILE ---
-// router.get("/me", authenticate, async (req, res) => {
-//   const user = await User.findById(req.user.id).select('-password');
-//   if (!user) return res.status(404).json({ message: "User not found." });
-//   res.json(user);
-// });
+router.post("/contact/submit" , authenticate , async (req,res) => {
+
+  const { subject, message } = req.body;
+
+  if (!subject || !message) {
+    return res.status(400).json({ message: "Subject and message are required" });
+  }                   
+});
 
 
-// router.get('/profile', async ( req, res) => {
-//   try {
-//     let user = await User.findById('main_user');
-//     if(!user){
-//       user = new User();
-//       await user.save();
-//     }
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).send('Server Error ');
-//   }
-// });
-
-
-router.post("/contact", passport.authenticate("user-jwt" , { session:false }) ,  async (req, res) => {
+router.post("/contact", authenticate ,  async (req, res) => {
   const { subject, message } = req.body;
 
   if (!subject || !message) {
@@ -155,21 +138,6 @@ router.put("/me", authenticate, async (req, res) => {
 });
 
 
-router.put('/profile', async (req, res) => {
-  const { name, email, phone, avatarUrl, bio } = req.body;
-  try{
-    let user = await User.findByIdAndUpdate('main_user',
-      { name, email , phone, avatarUrl, bio },
-      { new:true , user: true}
-    );
-    res.json(user);
-
-    
-  }catch(err){
-    res.status(500).send('Server Error');
-  }
-});
-
 // --- GET USER PROFILE BY ID (public, privacy-aware) ---
 router.get("/get/user/:userId", authenticate, async (req, res) => {
   const user = await User.findById(req.params.userId).select('-password');
@@ -180,12 +148,20 @@ router.get("/get/user/:userId", authenticate, async (req, res) => {
 
 // --- CHANGE PASSWORD ---
 router.post("/change-password", authenticate, async (req, res) => {
+  
   const { oldPassword, newPassword } = req.body;
-  if (!oldPassword || !newPassword) return res.status(400).json({ message: "All fields required." });
+  if (!oldPassword || !newPassword) return res.status(400).json({ 
+    message: "All fields required." 
+  });
   const user = await User.findById(req.user.id);
-  if (!user) return res.status(404).json({ message: "User not found." });
-  if (!(await bcrypt.compare(oldPassword, user.password))) return res.status(400).json({ message: "Old password incorrect." });
-  if (newPassword.length < 6) return res.status(400).json({ message: "Password must be at least 6 characters." });
+  if (!user) return res.status(404).json({ 
+    message: "User not found." 
+  });
+  if (!(await bcrypt.compare(oldPassword, user.password))) return res.status(400).json({ 
+    message: "Old password incorrect." 
+  });
+  if (newPassword.length < 6) return res.status(400).json({ 
+    message: "Password must be at least 6 characters." });
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
   res.json({ message: "Password successfully changed." });
