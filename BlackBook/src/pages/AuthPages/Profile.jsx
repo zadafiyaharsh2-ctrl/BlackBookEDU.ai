@@ -3,6 +3,23 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/AuthComponents/Navbar';
 
+// A reusable component for the statistic cards
+const StatCard = ({ title, value }) => (
+    <div className="bg-gray-800 p-6 rounded-lg shadow-xl text-center">
+        <h3 className="text-gray-400 uppercase tracking-wider text-sm font-semibold">{title}</h3>
+        <p className="text-4xl font-bold mt-2">{value}</p>
+    </div>
+);
+
+// A reusable component for each detail row in the main profile card
+const ProfileDetail = ({ label, value }) => (
+    <div className="flex items-center space-x-4">
+        <h3 className="w-36 text-gray-400 font-semibold uppercase text-sm">{label}</h3>
+        <p className="text-white flex-1">{value || 'Not provided'}</p>
+    </div>
+);
+
+
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -10,10 +27,34 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get('http://localhost:9090/api/user/profile');
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    console.error('No token found, redirecting to login.');
+                    setLoading(false);
+                    return;
+                }
+                // Fetch user data from your API
+                const res = await axios.get('http://localhost:9090/me', 
+                    {
+                        headers:{
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+                console.log('Fetched user data:', res.data);
                 setUser(res.data);
             } catch (err) {
                 console.error('Error fetching user profile:', err);
+                // Set some mock data on error to see the layout
+                setUser({
+                    fullname: "Deepesh (Error) ",
+                    username: "deepesh123 Error",
+                    email: "deepesh@example.com",
+                    institute: "IIIT Surat",
+                    rank: "125",
+                    instituteRank: "15",
+                    imageUrl: ""
+                });
             } finally {
                 setLoading(false);
             }
@@ -29,65 +70,52 @@ const ProfilePage = () => {
         );
     }
 
-    const renderDetail = (label, value) => (
-        <div className="grid grid-cols-3 gap-4 items-center">
-            <h3 className="text-gray-400 font-semibold col-span-1">{label}</h3>
-            <p className="text-white col-span-2">{value || 'Not provided'}</p>
-        </div>
-    );
-
     return (
         <div className="min-h-screen bg-gray-900 text-white font-sans">
             <Navbar />
-            <div className="container mx-auto p-4 md:p-8">
-                <div className="relative">
-                    {/* Header with Background Image */}
-                    <div
-                        className="h-48 md:h-64 bg-cover bg-center rounded-t-lg"
-                        style={{ backgroundImage: "url('https://4kwallpapers.com/images/walls/thumbs_2t/24066.jpg')" }}
-                    >
-                        <div className="absolute inset-0 bg-black opacity-50 rounded-t-lg"></div>
-                    </div>
+            <div className="container mx-auto p-4 sm:p-6 md:p-8">
 
-                    {/* Profile Picture and Name */}
-                    <div className="relative flex flex-col md:flex-row items-center md:items-end p-4 md:p-6 space-y-4 md:space-y-0 md:space-x-6 -mt-20 md:-mt-24">
-                        {user?.imageUrl ? (
-                            <img
-                                src={user.imageUrl}
-                                alt="Profile"
-                                className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-full border-4 border-gray-800 shadow-lg"
-                            />
-                        ) : (
-                            <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-700 rounded-full border-4 border-gray-800 flex items-center justify-center shadow-lg">
-                                <span className="text-gray-400">No Image</span>
-                            </div>
-                        )}
-                        <div className="text-center md:text-left">
-                            <h1 className="text-2xl md:text-4xl font-bold text-white">{user?.fullname}</h1>
-                            <p className="text-gray-400 text-sm md:text-base">@{user?.username}</p>
+                {/* --- Main Profile Info Card --- */}
+                <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col md:flex-row items-center gap-6">
+                    {/* Profile Picture */}
+                    {user?.imageUrl ? (
+                        <img
+                            src={user.imageUrl}
+                            alt="Profile"
+                            className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg border-2 border-gray-700"
+                        />
+                    ) : (
+                        <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-700 rounded-lg border-2 border-gray-700 flex items-center justify-center">
+                            <span className="text-gray-400">No Image</span>
                         </div>
+                    )}
+
+                    {/* User Details */}
+                    <div className="flex-1 w-full space-y-4">
+                        <ProfileDetail label="Name" value={user?.userName} />
+                        <ProfileDetail label="Username" value={user?.userName} />
+                        <ProfileDetail label="Email" value={user?.email} />
+                        <ProfileDetail label="Institute" value={user?.institute} />
+                        <ProfileDetail label="Rank" value={user?.rank} />
+                        <ProfileDetail label="Institute Rank" value={user?.instituteRank} />
                     </div>
                 </div>
 
-                {/* User Details Card */}
-                <div className="bg-gray-800 p-6 rounded-b-lg md:rounded-lg shadow-xl mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                        {renderDetail('Email', user?.email)}
-                        {renderDetail('Institute', user?.institute)}
-                        {renderDetail('Rank', user?.rank || 'N/A')}
-                        {renderDetail('Institute Rank', user?.instituteRank || 'N/A')}
-                        <div className="md:col-span-2">
-                             {renderDetail('Bio', user?.bio || 'N/A')}
-                        </div>
-                    </div>
-                    <div className="mt-8 text-right">
-                        <Link
-                            to="/settings"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
-                        >
-                            Edit Profile
-                        </Link>
-                    </div>
+                {/* --- Stats Section --- */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <StatCard title="Students Average Engaging Time" value="3:30" />
+                    <StatCard title="Daily Average Problem Solve" value="50" />
+                    <StatCard title="Average Points" value="2000" />
+                </div>
+                
+                {/* --- Edit Profile Button --- */}
+                <div className="mt-8 text-center md:text-right">
+                    <Link
+                        to="/settings" 
+                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                    >
+                        Edit Profile
+                    </Link>
                 </div>
             </div>
         </div>
