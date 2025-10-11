@@ -4,6 +4,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Contact = require("../models/Contact");
+const multer = require('multer');
+
+
+const upload =  multer({ storage: multer.memoryStorage() });
 
 // Helper: issue JWT with user role and org/dept info
 function issueJwt(user) {
@@ -128,11 +132,21 @@ router.post("/contact", authenticate ,  async (req, res) => {
 });
 
 // --- EDIT PROFILE (only self, or admin for others) ---
-router.put("/me", authenticate, async (req, res) => {
+router.put("/me", authenticate, upload.single('avatar'), async (req, res) => {
   const updateFields = {};
-  ["userName", "email", "phone", "avatarUrl", "bio"].forEach(field => {
+  ["userName", "fullName", "email", "phone", "bio"].forEach(field => {
     if (req.body[field]) updateFields[field] = req.body[field];
   });
+  if (req.file) {
+    // If an avatar is uploaded, add it to the updateFields
+    updateFields.avatarUrl = req.file.buffer;
+  }
+
+  if( req.file){
+    const mimeType = req.file.mimetype;
+    const base64Data = req.file.buffer.toString('base64');
+    updateFields.avatarUrl = `data:${mimeType};base64,${base64Data}`;
+  }
   const user = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
   res.json(user);
 });

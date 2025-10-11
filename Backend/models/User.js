@@ -38,11 +38,11 @@ const UserSchema = new mongoose.Schema({
   },
 
   // Relations
-  institutionId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Institution", 
-    default: null 
-  },
+  // institutionName: { 
+  //   type: String,
+  //   ref: "Institution", 
+  //   default: null 
+  // },
   departmentId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Department", 

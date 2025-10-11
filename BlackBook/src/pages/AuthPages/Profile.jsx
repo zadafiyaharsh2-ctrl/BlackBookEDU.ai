@@ -77,9 +77,9 @@ const ProfilePage = () => {
                 {/* --- Main Profile Info Card --- */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col md:flex-row items-center gap-6">
                     {/* Profile Picture */}
-                    {user?.imageUrl ? (
+                    {user?.avatarUrl ? (
                         <img
-                            src={user.imageUrl}
+                            src={user.avatarUrl}
                             alt="Profile"
                             className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg border-2 border-gray-700"
                         />
@@ -97,6 +97,7 @@ const ProfilePage = () => {
                         <ProfileDetail label="Institute" value={user?.institute} />
                         <ProfileDetail label="Rank" value={user?.rank} />
                         <ProfileDetail label="Institute Rank" value={user?.instituteRank} />
+                        <ProfileDetail label="Bio" value={user?.bio} />
                     </div>
                 </div>
 
