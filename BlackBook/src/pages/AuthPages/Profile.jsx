@@ -92,7 +92,7 @@ const ProfilePage = () => {
 
                     {/* User Details */}
                     <div className="flex-1 w-full space-y-4">
-                        <ProfileDetail label="Name" value={user?.userName} />
+                        <ProfileDetail label="Name" value={user?.fullName} />
                         <ProfileDetail label="Username" value={user?.userName} />
                         <ProfileDetail label="Email" value={user?.email} />
                         <ProfileDetail label="Institute" value={user?.institute} />
