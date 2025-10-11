@@ -45,7 +45,6 @@ const ProfilePage = () => {
                 setUser(res.data);
             } catch (err) {
                 console.error('Error fetching user profile:', err);
-                // Set some mock data on error to see the layout
                 setUser({
                     fullname: "Deepesh (Error) ",
                     userName: "deepesh123 Error",

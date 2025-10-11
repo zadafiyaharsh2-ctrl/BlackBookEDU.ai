@@ -46,8 +46,8 @@ function authenticate(req, res, next) {
 
 // --- SIGNUP ---
 router.post("/register", async (req, res) => {
-  let { userName, email, phone, password, role, institutionId, departmentId } = req.body;
-  if (!userName  || !email || !password)
+  let { userName, fullName, email, phone, password, role, institutionId, departmentId } = req.body;
+  if (!userName  || !fullName || !email || !password)
     return res.status(400).json({ message: "Missing required fields." });
 
   // Assign default role if not provided
@@ -61,6 +61,7 @@ router.post("/register", async (req, res) => {
 
   const newUser = await User.create({
     userName,
+    fullName,
     email,
     phone,
     password: hashed,
@@ -105,20 +106,6 @@ router.get("/me", authenticate, async (req, res) => {
 });
 
 
-// router.get('/profile', async ( req, res) => {
-//   try {
-//     let user = await User.findById('main_user');
-//     if(!user){
-//       user = new User();
-//       await user.save();
-//     }
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).send('Server Error ');
-//   }
-// });
-
-
 router.post("/contact", authenticate ,  async (req, res) => {
   const { subject, message } = req.body;
 
@@ -128,7 +115,6 @@ router.post("/contact", authenticate ,  async (req, res) => {
 
   try {
     const contact = new Contact({
-      user: req.user._id,
       subject,
       message,
     });
