@@ -94,73 +94,99 @@ const EditProfilePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white p-8">
-            <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <div className="md-col-span-1">
-                        {/* Left column content remains the same */}
-                        <button onClick={() => navigate(-1)} /* ... */ >Back</button>
-                        <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
-                        <p className="text-gray-400">Update your personal details.</p>
-                    </div>
+        <div className="min-h-screen bg-[#121212] text-white p-4 sm:p-8 font-sans">
+            <div className="max-w-full mx-auto">
 
-                    <div className="md:col-span-2">
-                         <div className="flex items-center space-x-6 mb-6">
-                            {avatarPreview ? (
-                                <img 
-                                    src={avatarPreview} 
-                                    alt="Profile Preview" 
-                                    className="w-24 h-24 object-cover rounded-lg border-2 border-gray-700"
-                                />
-                            ) : (
-                                <div className="w-24 h-24 bg-gray-800 rounded-lg flex items-center justify-center">
-                                    <span className="text-gray-500">Photo</span>
-                                </div>
-                            )}
-                            <label htmlFor="profileImage" className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg">
-                                Change Picture
-                            </label>
-                            <input 
-                                type="file" 
-                                id="profileImage" 
-                                accept="image/*"
-                                // 4. Point the file input to the correct handler
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
+
+            <div className="flex items-center justify-between border-b border-gray-700 pb-4">
+                <h1 className="text-xl font-bold tracking-wider">BlackBookEDU</h1>
+            </div>
+
+            <div className="flex items-center border-b border-gray-700 mt-4">
+                <button 
+                    onClick={() => navigate('/profile')}
+                    className="py-3 px-5 text-sm font-semibold text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer"
+                >
+                    BACK TO PROFILE
+                </button>
+                <span className="py-3 px-5 text-sm text-white border-b-2 border-white font-semibold ">
+                    SETTINGS
+                </span>
+            </div>
+
+                <div className="mt-8 ">
+                     {/* Image Upload Section */}
+                <div className="bg-black rounded-lg p-6 flex items-center space-x-6 mb-8">
+                    {avatarPreview ? (
+                        <img 
+                            src={avatarPreview} 
+                            alt="Profile Preview" 
+                            className="w-24 h-24 object-cover rounded-full border-2 border-gray-700"
+                        />
+                    ) : (
+                        <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center">
+                            <span className="text-gray-500">Photo</span>
                         </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                                    <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label htmlFor="userName" className="block text-sm font-medium text-gray-400 mb-1">Username</label>
-                                    <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="bio" className="block text-sm font-medium text-gray-400 mb-1">Bio</label>
-                                <textarea name="bio" id="bio" rows="4" value={formData.bio} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2"></textarea>
-                            </div>
-
-                            <div className="text-right">
-                                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
+                    )}
+                    <div>
+                        <label htmlFor="profileImage" className="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200">
+                            Change Picture
+                        </label>
+                        <input 
+                            type="file" 
+                            id="profileImage" 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="hidden"
+                        />
                     </div>
                 </div>
+
+                </div>
+
+                <form onSubmit={handleSubmit} className="bg-[#1a1a1a] rounded-lg p-6">
+                    <h2 className="text-lg font-semibold mb-4 text-gray-300">Basic Info</h2>
+                     
+                     <div className="space-y-4">
+                        {/* Full Name */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="fullName" className="text-sm text-gray-400">Name</label>
+                            <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+
+                        {/* Username */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="userName" className="text-sm text-gray-400">Username</label>
+                            <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Email */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="email" className="text-sm text-gray-400">Email</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Bio */}
+                        <div className="grid grid-cols-3 items-start">
+                            <label htmlFor="bio" className="text-sm text-gray-400 pt-2">Bio</label>
+                            <textarea name="bio" id="bio" rows="3" value={formData.bio} onChange={handleChange} className="custom-scrollbar col-span-2 bg-transparent text-white border-none focus:ring-0 resize-none"></textarea>
+                        </div>
+                     </div>
+                        <hr className="border-gray-800 my-6" />
+                        <h2 className="text-lg font-semibold mb-4 text-gray-300">Security</h2>
+                        {/* Password Change Placeholder */}
+                        <div className="text-sm text-gray-400">
+                            To change your password, please visit the <span className="text-blue-500 underline cursor-pointer" onClick={() => navigate('/change-password')}>Change Password</span> page.
+                        </div>
+                        <div className="mt-6 text-right">
+                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
     );
 }
 
