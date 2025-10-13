@@ -7,6 +7,9 @@ const EditProfilePage = () => {
         fullName: '',
         userName: '',
         email: '',
+        phone: '',
+        location: '',
+        // birthdate: '',
         bio: '',
     });
     const [selectedFile, setSelectedFile] = useState(null);
@@ -29,6 +32,9 @@ const EditProfilePage = () => {
                     fullName: res.data.fullName || '',
                     userName: res.data.userName || '',
                     email: res.data.email || '',
+                    phone: res.data.phone || '',
+                    location: res.data.location || '',
+                    // birthdate: res.data.birthdate || '',
                     bio: res.data.bio || '',
                 });
                 if (res.data.avatarUrl) {
@@ -72,6 +78,9 @@ const EditProfilePage = () => {
             submitData.append('fullName', formData.fullName);
             submitData.append('userName', formData.userName);
             submitData.append('email', formData.email);
+            submitData.append('phone', formData.phone);
+            submitData.append('location', formData.location);
+            // submitData.append('birthdate', formData.birthdate);
             submitData.append('bio', formData.bio);
             
             if (selectedFile) {
@@ -167,6 +176,24 @@ const EditProfilePage = () => {
                             <input type="email" name="email" value={formData.email} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
                         </div>
                         <hr className="border-gray-800" />
+                        {/* Phone */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="phone" className="text-sm text-gray-400">Phone</label>
+                            <input type="text" name="phone" value={formData.phone || ''} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Location */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="location" className="text-sm text-gray-400">Location</label>
+                            <input type="text" name="location" value={formData.location || ''} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Birthdate */}
+                        {/* <div className='grid grid-cols-3 items-center'>
+                            <label htmlFor='birthdate' className='text-sm text-gray-400'>Birthdate</label>
+                            <input type='text' name="birthdate" value={formData.birthdate || ''} onChange={handleChange} className='col-span-2 bg-transparent text-white border-none focus:ring-0' />
+                        </div> */}
+
                         {/* Bio */}
                         <div className="grid grid-cols-3 items-start">
                             <label htmlFor="bio" className="text-sm text-gray-400 pt-2">Bio</label>

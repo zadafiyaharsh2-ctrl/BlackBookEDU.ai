@@ -86,9 +86,12 @@ const ProfilePage = () => {
                         <ProfileDetail label="Full Name" value={user?.fullName} />
                         <ProfileDetail label="Username" value={user?.userName} />
                         <ProfileDetail label="Email" value={user?.email} />
-                        <ProfileDetail label="Institute" value={user?.institute} />
+                        {/* <ProfileDetail label="Institute" value={user?.institute} />
                         <ProfileDetail label="Rank" value={user?.rank} />
-                        <ProfileDetail label="Institute Rank" value={user?.instituteRank} />
+                        <ProfileDetail label="Institute Rank" value={user?.instituteRank} /> */}
+                        <ProfileDetail label="Phone" value={user?.phone} />
+                        <ProfileDetail label="location" value={user?.location} />
+                        {/* <ProfileDetail label="birthdate" value={user?.birthdate} /> */}
                         <div className="flex items-start space-x-4">
                             <h3 className="w-36 text-gray-400 font-semibold text-sm pt-1">Bio</h3>
                             <p className="text-white flex-1 max-h-34 overflow-y-scroll  pr-2 custom-scrollbar">{user?.bio || 'Not provided'}</p>

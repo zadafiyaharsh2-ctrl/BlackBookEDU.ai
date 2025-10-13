@@ -18,6 +18,12 @@ const UserSchema = new mongoose.Schema({
   phone: { 
     type: String 
   },
+  location: { 
+    type: String 
+  },
+  // birthdate: { 
+  //   type: Date 
+  // },
   password: { 
     type: String, 
     required: true 
