@@ -142,7 +142,7 @@ router.post("/contact", authenticate ,  async (req, res) => {
 router.put('/me', authenticate, upload.single('avatar'), async (req, res) => {
   try {
     const updateFields = {};
-    ['userName', 'fullName', 'email', 'phone', 'location', 'bio'].forEach(f => {
+    ['userName', 'fullName', 'email', 'phone', 'birthdate', 'location', 'bio'].forEach(f => {
       if (req.body[f] !== undefined) updateFields[f] = req.body[f];
     });
 

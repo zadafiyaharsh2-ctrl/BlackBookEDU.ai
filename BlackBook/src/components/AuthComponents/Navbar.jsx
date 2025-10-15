@@ -9,6 +9,7 @@ const navItems = [
     { label: 'Problems', href: '/Problems' },
     { label: 'Analytics', href: '/Analytics' },
     { label: 'Ask AI', href: '/Ai' },
+    { label: 'Social', href: '/Social' },
 ];
 
 // We'll add these links to the mobile menu directly
