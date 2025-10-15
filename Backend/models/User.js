@@ -18,6 +18,12 @@ const UserSchema = new mongoose.Schema({
   phone: { 
     type: String 
   },
+  location: { 
+    type: String 
+  },
+  birthdate: { 
+    type: String
+  },
   password: { 
     type: String, 
     required: true 
@@ -38,11 +44,11 @@ const UserSchema = new mongoose.Schema({
   },
 
   // Relations
-  institutionId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Institution", 
-    default: null 
-  },
+  // institutionName: { 
+  //   type: String,
+  //   ref: "Institution", 
+  //   default: null 
+  // },
   departmentId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Department", 

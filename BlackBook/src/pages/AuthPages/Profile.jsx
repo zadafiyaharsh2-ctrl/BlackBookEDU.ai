@@ -6,7 +6,7 @@ import Navbar from '../../components/AuthComponents/Navbar';
 // A reusable component for the statistic cards
 const StatCard = ({ title, value }) => (
     <div className="bg-gray-800 p-6 rounded-lg shadow-xl text-center">
-        <h3 className="text-gray-400 uppercase tracking-wider text-sm font-semibold">{title}</h3>
+        <h3 className="text-gray-400 tracking-wider text-sm font-semibold">{title}</h3>
         <p className="text-4xl font-bold mt-2">{value}</p>
     </div>
 );
@@ -14,7 +14,7 @@ const StatCard = ({ title, value }) => (
 // A reusable component for each detail row in the main profile card
 const ProfileDetail = ({ label, value }) => (
     <div className="flex items-center space-x-4">
-        <h3 className="w-36 text-gray-400 font-semibold uppercase text-sm">{label}</h3>
+        <h3 className="w-36 text-gray-400 font-semibold text-sm">{label}</h3>
         <p className="text-white flex-1">{value || 'Not provided'}</p>
     </div>
 );
@@ -45,15 +45,7 @@ const ProfilePage = () => {
                 setUser(res.data);
             } catch (err) {
                 console.error('Error fetching user profile:', err);
-                setUser({
-                    fullname: "Deepesh (Error) ",
-                    userName: "deepesh123 Error",
-                    email: "deepesh@example.com",
-                    institute: "IIIT Surat",
-                    rank: "125",
-                    instituteRank: "15",
-                    imageUrl: ""
-                });
+                alert('Failed to fetch user profile. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -77,11 +69,11 @@ const ProfilePage = () => {
                 {/* --- Main Profile Info Card --- */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col md:flex-row items-center gap-6">
                     {/* Profile Picture */}
-                    {user?.imageUrl ? (
+                    {user?.avatarUrl ? (
                         <img
-                            src={user.imageUrl}
+                            src={user.avatarUrl}
                             alt="Profile"
-                            className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg border-2 border-gray-700"
+                            className="w-60 h-50 md:w-80 md:h-80 object-cover rounded-lg border-2 border-gray-700"
                         />
                     ) : (
                         <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-700 rounded-lg border-2 border-gray-700 flex items-center justify-center">
@@ -91,12 +83,19 @@ const ProfilePage = () => {
 
                     {/* User Details */}
                     <div className="flex-1 w-full space-y-4">
-                        <ProfileDetail label="Name" value={user?.userName} />
+                        <ProfileDetail label="Full Name" value={user?.fullName} />
                         <ProfileDetail label="Username" value={user?.userName} />
                         <ProfileDetail label="Email" value={user?.email} />
-                        <ProfileDetail label="Institute" value={user?.institute} />
+                        {/* <ProfileDetail label="Institute" value={user?.institute} />
                         <ProfileDetail label="Rank" value={user?.rank} />
-                        <ProfileDetail label="Institute Rank" value={user?.instituteRank} />
+                        <ProfileDetail label="Institute Rank" value={user?.instituteRank} /> */}
+                        <ProfileDetail label="Phone" value={user?.phone} />
+                        <ProfileDetail label="location" value={user?.location} />
+                        <ProfileDetail label="birthdate" value={user?.birthdate} />
+                        <div className="flex items-start space-x-4">
+                            <h3 className="w-36 text-gray-400 font-semibold text-sm pt-1">Bio</h3>
+                            <p className="text-white flex-1 max-h-34 overflow-y-scroll  pr-2 custom-scrollbar">{user?.bio || 'Not provided'}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -108,14 +107,14 @@ const ProfilePage = () => {
                 </div>
                 
                 {/* --- Edit Profile Button --- */}
-                <div className="mt-8 text-center md:text-right">
+                {/* <div className="mt-8 text-center md:text-right">
                     <Link
                         to="/settings" 
                         className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
                     >
                         Edit Profile
                     </Link>
-                </div>
+                </div> */}
             </div>
         </div>
     );

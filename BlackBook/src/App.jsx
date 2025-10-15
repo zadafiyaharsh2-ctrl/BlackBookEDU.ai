@@ -11,6 +11,7 @@ import Analytics from './pages/AuthPages/Analytics';
 import Problems from './pages/AuthPages/Problems';
 import Settings from './pages/AuthPages/Settings';
 import Playground from './pages/AuthPages/Playground';
+import Social from './pages/AuthPages/Social';
 import { useCookies } from 'react-cookie';
 
 
@@ -32,6 +33,7 @@ const App = () => {
                 <Route path='/Problems' element={<Problems />} />
                 <Route path='/Settings' element={<Settings />} />
                 <Route path='/Playground' element={<Playground />} />
+                <Route path='/Social' element={<Social />} />
                 <Route path="*" element={<Home />} />
               </Routes>
             ) : (

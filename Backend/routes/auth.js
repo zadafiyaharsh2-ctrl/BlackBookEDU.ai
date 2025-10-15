@@ -4,6 +4,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Contact = require("../models/Contact");
+const multer = require('multer');
+
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype && file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are allowed'), false);
+  }
+});
 
 // Helper: issue JWT with user role and org/dept info
 function issueJwt(user) {
@@ -128,13 +139,36 @@ router.post("/contact", authenticate ,  async (req, res) => {
 });
 
 // --- EDIT PROFILE (only self, or admin for others) ---
-router.put("/me", authenticate, async (req, res) => {
-  const updateFields = {};
-  ["userName", "email", "phone", "avatarUrl", "bio"].forEach(field => {
-    if (req.body[field]) updateFields[field] = req.body[field];
-  });
-  const user = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
-  res.json(user);
+router.put('/me', authenticate, upload.single('avatar'), async (req, res) => {
+  try {
+    const updateFields = {};
+    ['userName', 'fullName', 'email', 'phone', 'birthdate', 'location', 'bio'].forEach(f => {
+      if (req.body[f] !== undefined) updateFields[f] = req.body[f];
+    });
+
+    // If username/email provided, check if someone else already has it
+    if (updateFields.userName) {
+      const other = await User.findOne({ userName: updateFields.userName, _id: { $ne: req.user.id } });
+      if (other) return res.status(409).json({ message: 'Username already taken.' });
+    }
+    if (updateFields.email) {
+      const other = await User.findOne({ email: updateFields.email, _id: { $ne: req.user.id } });
+      if (other) return res.status(409).json({ message: 'Email already in use.' });
+    }
+
+    if (req.file) {
+      // convert to data URL (or ideally upload to cloud and set URL)
+      const mimeType = req.file.mimetype;
+      const base64Data = req.file.buffer.toString('base64');
+      updateFields.avatarUrl = `data:${mimeType};base64,${base64Data}`;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true }).select('-password');
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 
@@ -153,7 +187,7 @@ router.post("/change-password", authenticate, async (req, res) => {
   if (!oldPassword || !newPassword) return res.status(400).json({ 
     message: "All fields required." 
   });
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id).select('+password');
   if (!user) return res.status(404).json({ 
     message: "User not found." 
   });

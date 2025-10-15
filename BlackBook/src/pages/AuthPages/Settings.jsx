@@ -4,198 +4,216 @@ import { useNavigate } from 'react-router-dom';
 
 const EditProfilePage = () => {
     const [formData, setFormData] = useState({
-        fullname: '',
-        username: '',
+        fullName: '',
+        userName: '',
         email: '',
+        phone: '',
+        location: '',
+        birthdate: '',
         bio: '',
-        institute: '',
-        rank: '',
-        instituteRank: '',
-        imageUrl: ''
     });
     const [selectedFile, setSelectedFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null); // Renamed for clarity
 
     const navigate = useNavigate();
 
     useEffect(() => {
-
         const fetchCurrentUser = async () => {
             try {
-                const res = await axios.get('http://localhost:9090/api/user/profile');
-                setFormData({
-                    fullname: res.data.fullname || '',
-                    username: res.data.username || '',
-                    email: res.data.email || '',
-                    bio: res.data.bio || '',
-                    institute: res.data.institute || '',
-                    rank: res.data.rank || '',
-                    instituteRank: res.data.instituteRank || '',
-                    imageUrl: res.data.imageUrl || ''
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+                const res = await axios.get('http://localhost:9090/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-                // Set image preview if user has an existing image
-                if (res.data.imageUrl) {
-                    setImagePreview(res.data.imageUrl); // imageUrl is now Base64 data URL
+                setFormData({
+                    fullName: res.data.fullName || '',
+                    userName: res.data.userName || '',
+                    email: res.data.email || '',
+                    phone: res.data.phone || '',
+                    location: res.data.location || '',
+                    // birthdate: res.data.birthdate || '',
+                    bio: res.data.bio || '',
+                });
+                if (res.data.avatarUrl) {
+                    setAvatarPreview(res.data.avatarUrl);
                 }
             } catch (err) {
                 console.error('Error fetching user profile:', err);
+                if (err.response && err.response.status === 401) {
+                    navigate('/login');
+                }
             }
         };
         fetchCurrentUser();
-    }, []);
+    }, [navigate]);
 
-    // Cleanup effect to revoke object URLs
-    useEffect(() => {
-        return () => {
-            if (imagePreview && imagePreview.startsWith('blob:')) {
-                URL.revokeObjectURL(imagePreview);
-            }
-        };
-    }, [imagePreview]);
-
+    // 1. This handler is ONLY for text inputs.
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // 2. This is a NEW, separate handler for the file input.
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
-            // Revoke previous object URL to prevent memory leaks
-            if (imagePreview && imagePreview.startsWith('blob:')) {
-                URL.revokeObjectURL(imagePreview);
-            }
-            // Create preview URL
-            const previewUrl = URL.createObjectURL(file);
-            setImagePreview(previewUrl);
+            setAvatarPreview(URL.createObjectURL(file));
         }
     };
+
+    // 3. This is the corrected handleSubmit using FormData
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Create FormData for file upload
-            const submitData = new FormData();
-            submitData.append('fullname', formData.fullname);
-            submitData.append('username', formData.username);
-            submitData.append('email', formData.email);
-            submitData.append('bio', formData.bio);
-            submitData.append('institute', formData.institute);
-            submitData.append('rank', formData.rank);
-            submitData.append('instituteRank', formData.instituteRank);
-            
-            // If a file is selected, append it
-            if (selectedFile) {
-                submitData.append('profileImage', selectedFile);
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                navigate('/login');
+                return;
             }
 
-            await axios.put('http://localhost:9090/api/user/profile', submitData, {
+            const submitData = new FormData();
+            submitData.append('fullName', formData.fullName);
+            submitData.append('userName', formData.userName);
+            submitData.append('email', formData.email);
+            submitData.append('phone', formData.phone);
+            submitData.append('location', formData.location);
+            submitData.append('birthdate', formData.birthdate);
+            submitData.append('bio', formData.bio);
+            
+            if (selectedFile) {
+                submitData.append('avatar', selectedFile);
+            }
+
+            await axios.put('http://localhost:9090/me', submitData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    // Axios will automatically set the correct 'multipart/form-data' header
+                    'Authorization': `Bearer ${token}`
                 },
             });
+
             alert('Profile updated successfully!');
             navigate('/profile');
         } catch (err) {
             console.error('Error updating profile:', err);
             alert('Failed to update profile. Please try again.');
         }
-
     };
+
     return (
-        <div className="min-h-screen bg-black text-white p-8">
-            <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    {/* Left Column: Title and Description */}
-                    <div className="md:col-span-1">
-                        <button 
-                            onClick={() => navigate(-1)} 
-                            className="flex items-center text-gray-400 hover:text-white mb-6 cursor-pointer"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                            </svg>
-                            Back
-                        </button>
-                        <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
-                        <p className="text-gray-400">
-                            Update your personal details and profile picture.
-                        </p>
-                    </div>
+        <div className="min-h-screen bg-[#121212] text-white p-4 sm:p-8 font-sans">
+            <div className="max-w-full mx-auto">
 
-                    {/* Right Column: Form */}
-                    <div className="md:col-span-2">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Profile Picture */}
-                            <div className="flex items-center space-x-6">
-                                {imagePreview ? (
-                                    <img 
-                                        src={imagePreview} 
-                                        alt="Profile Preview" 
-                                        className="w-24 h-24 object-cover rounded-full border-2 border-gray-700"
-                                    />
-                                ) : (
-                                    <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center">
-                                        <span className="text-gray-500">Photo</span>
-                                    </div>
-                                )}
-                                <label htmlFor="profileImage" className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg">
-                                    Change Picture
-                                </label>
-                                <input 
-                                    type="file" 
-                                    name="profileImage" 
-                                    id="profileImage" 
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-                            </div>
 
-                            {/* Form Fields */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label htmlFor="fullname" className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                                    <input type="text" name="fullname" id="fullname" value={formData.fullname} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="username" className="block text-sm font-medium text-gray-400 mb-1">Username</label>
-                                    <input type="text" name="username" id="username" value={formData.username} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                                    <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="institute" className="block text-sm font-medium text-gray-400 mb-1">Institute</label>
-                                    <input type="text" name="institute" id="institute" value={formData.institute} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="rank" className="block text-sm font-medium text-gray-400 mb-1">Rank</label>
-                                    <input type="text" name="rank" id="rank" value={formData.rank} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="instituteRank" className="block text-sm font-medium text-gray-400 mb-1">Institute Rank</label>
-                                    <input type="text" name="instituteRank" id="instituteRank" value={formData.instituteRank} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                </div>
-                            </div>
+            <div className="flex items-center justify-between border-b border-gray-700 pb-4">
+                <h1 className="text-xl font-bold tracking-wider">BlackBookEDU</h1>
+            </div>
 
-                            {/* Bio */}
-                            <div>
-                                <label htmlFor="bio" className="block text-sm font-medium text-gray-400 mb-1">Bio</label>
-                                <textarea name="bio" id="bio" rows="4" value={formData.bio} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                            </div>
+            <div className="flex items-center border-b border-gray-700 mt-4">
+                <button 
+                    onClick={() => navigate('/profile')}
+                    className="py-3 px-5 text-sm font-semibold text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer"
+                >
+                    BACK TO PROFILE
+                </button>
+                <span className="py-3 px-5 text-sm text-white border-b-2 border-white font-semibold ">
+                    SETTINGS
+                </span>
+            </div>
 
-                            {/* Submit Button */}
-                            <div className="text-right">
-                                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
+                <div className="mt-8 ">
+                     {/* Image Upload Section */}
+                <div className="bg-black rounded-lg p-6 flex items-center space-x-6 mb-8">
+                    {avatarPreview ? (
+                        <img 
+                            src={avatarPreview} 
+                            alt="Profile Preview" 
+                            className="w-24 h-24 object-cover rounded-full border-2 border-gray-700"
+                        />
+                    ) : (
+                        <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center">
+                            <span className="text-gray-500">Photo</span>
+                        </div>
+                    )}
+                    <div>
+                        <label htmlFor="profileImage" className="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200">
+                            Change Picture
+                        </label>
+                        <input 
+                            type="file" 
+                            id="profileImage" 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="hidden"
+                        />
                     </div>
                 </div>
+
+                </div>
+
+                <form onSubmit={handleSubmit} className="bg-[#1a1a1a] rounded-lg p-6">
+                    <h2 className="text-lg font-semibold mb-4 text-gray-300">Basic Info</h2>
+                     
+                     <div className="space-y-4">
+                        {/* Full Name */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="fullName" className="text-sm text-gray-400">Name</label>
+                            <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+
+                        {/* Username */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="userName" className="text-sm text-gray-400">Username</label>
+                            <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Email */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="email" className="text-sm text-gray-400">Email</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Phone */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="phone" className="text-sm text-gray-400">Phone</label>
+                            <input type="text" name="phone" value={formData.phone || ''} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Location */}
+                        <div className="grid grid-cols-3 items-center">
+                            <label htmlFor="location" className="text-sm text-gray-400">Location</label>
+                            <input type="text" name="location" value={formData.location || ''} onChange={handleChange} className="col-span-2 bg-transparent text-white border-none focus:ring-0" />
+                        </div>
+                        <hr className="border-gray-800" />
+                        {/* Birthdate */}
+                        <div className='grid grid-cols-3 items-center'>
+                            <label htmlFor='birthdate' className='text-sm text-gray-400'>Birthdate</label>
+                            <input type='text' name="birthdate" value={formData.birthdate || ''} onChange={handleChange} className='col-span-2 bg-transparent text-white border-none focus:ring-0' />
+                        </div>
+
+                        {/* Bio */}
+                        <div className="grid grid-cols-3 items-start">
+                            <label htmlFor="bio" className="text-sm text-gray-400 pt-2">Bio</label>
+                            <textarea name="bio" id="bio" rows="3" value={formData.bio} onChange={handleChange} className="custom-scrollbar col-span-2 bg-transparent text-white border-none focus:ring-0 resize-none"></textarea>
+                        </div>
+                     </div>
+                        <hr className="border-gray-800 my-6" />
+                        <h2 className="text-lg font-semibold mb-4 text-gray-300">Security</h2>
+                        {/* Password Change Placeholder */}
+                        <div className="text-sm text-gray-400">
+                            To change your password, please visit the <span className="text-blue-500 underline cursor-pointer" onClick={() => navigate('/change-password')}>Change Password</span> page.
+                        </div>
+                        <div className="mt-6 text-right">
+                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
     );
 }
 
