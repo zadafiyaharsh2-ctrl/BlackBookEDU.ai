@@ -9,7 +9,7 @@ const EditProfilePage = () => {
         email: '',
         phone: '',
         location: '',
-        // birthdate: '',
+        birthdate: '',
         bio: '',
     });
     const [selectedFile, setSelectedFile] = useState(null);
@@ -80,7 +80,7 @@ const EditProfilePage = () => {
             submitData.append('email', formData.email);
             submitData.append('phone', formData.phone);
             submitData.append('location', formData.location);
-            // submitData.append('birthdate', formData.birthdate);
+            submitData.append('birthdate', formData.birthdate);
             submitData.append('bio', formData.bio);
             
             if (selectedFile) {
@@ -189,10 +189,10 @@ const EditProfilePage = () => {
                         </div>
                         <hr className="border-gray-800" />
                         {/* Birthdate */}
-                        {/* <div className='grid grid-cols-3 items-center'>
+                        <div className='grid grid-cols-3 items-center'>
                             <label htmlFor='birthdate' className='text-sm text-gray-400'>Birthdate</label>
                             <input type='text' name="birthdate" value={formData.birthdate || ''} onChange={handleChange} className='col-span-2 bg-transparent text-white border-none focus:ring-0' />
-                        </div> */}
+                        </div>
 
                         {/* Bio */}
                         <div className="grid grid-cols-3 items-start">

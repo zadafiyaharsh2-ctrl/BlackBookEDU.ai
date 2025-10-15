@@ -21,9 +21,9 @@ const UserSchema = new mongoose.Schema({
   location: { 
     type: String 
   },
-  // birthdate: { 
-  //   type: Date 
-  // },
+  birthdate: { 
+    type: String
+  },
   password: { 
     type: String, 
     required: true 
