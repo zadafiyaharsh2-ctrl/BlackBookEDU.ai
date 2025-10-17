@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAuthFromOutside } from '../utils/authContext';
+import { useAuth } from '../utils/AuthContext';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API || "http://localhost:9090",
@@ -35,17 +35,17 @@ api.interceptors.response.use(
         try {
           const { data } = await api.post('/admin/token');
           localStorage.setItem('accessToken', data.accessToken);
-          setAuthFromOutside(true);
+          useAuth(true);
           return api(original);
         } catch {
           localStorage.removeItem('accessToken');
-          setAuthFromOutside(false);
+          useAuth(false);
           window.location.href = '/login';
         }
       } else {
         // For normal users, just log out and redirect
         localStorage.removeItem('accessToken');
-        setAuthFromOutside(false);
+        useAuth(false);
         window.location.href = '/login';
       }
     }

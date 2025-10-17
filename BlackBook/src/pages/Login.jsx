@@ -4,9 +4,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from '../utils/api';
 import { useCookies } from 'react-cookie';
+// import { useAuth } from '../utils/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  // const { login } = useAuth();
   const [, setCookie] = useCookies(["token"]);
   const [form, setForm] = useState({
     email: "",
@@ -39,6 +41,8 @@ const Login = () => {
       const res = await api.post("/login", form);
                 
       if (res.data && res.data.success) {
+
+        // login(res.data.token);
 
           const expirationDate = new Date();
           expirationDate.setDate(expirationDate.getDate() + 30);

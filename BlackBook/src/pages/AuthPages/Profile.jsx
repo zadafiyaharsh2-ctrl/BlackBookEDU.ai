@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/AuthComponents/Navbar';
+import HeatMap from '../../components/ProfileComponents/HeatMap';
 
 // A reusable component for the statistic cards
 const StatCard = ({ title, value }) => (
@@ -116,6 +117,7 @@ const ProfilePage = () => {
                     </Link>
                 </div> */}
             </div>
+            <HeatMap />
         </div>
     );
 };

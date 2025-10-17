@@ -57,8 +57,8 @@ function authenticate(req, res, next) {
 
 // --- SIGNUP ---
 router.post("/register", async (req, res) => {
-  let { userName, fullName, email, phone, password, role, institutionId, departmentId } = req.body;
-  if (!userName  || !fullName || !email || !password)
+  let { userName,  email, phone, password, role, institutionId, departmentId } = req.body;
+  if (!userName  || !email || !password)
     return res.status(400).json({ message: "Missing required fields." });
 
   // Assign default role if not provided
@@ -72,7 +72,7 @@ router.post("/register", async (req, res) => {
 
   const newUser = await User.create({
     userName,
-    fullName,
+    fullName: userName,
     email,
     phone,
     password: hashed,
@@ -216,6 +216,74 @@ router.get("/dept/:deptId/users", authenticate, requireRole("webappAdmin", "dean
   const users = await User.find({ departmentId: req.params.deptId }).select("userName email phone role");
   res.json({ users });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+ // --- SUBMISSION ROUTES ---// Heatmap and submission recording
+const correctAnswers = { q1: 'Paris', q2: 'Mars', q3: 'H2O' };
+
+const Submission = require('../models/SubmissionModel');
+const auth = require('../utils/helper').verifyToken;
+router.post('/submit', authenticate, async (req, res) => {
+  const userAnswers = req.body;
+  let score = 0;
+
+  for (const questionId in userAnswers) {
+    if (userAnswers[questionId] === correctAnswers[questionId]) {
+      score++;
+    }
+  }
+
+  if (score === 0) {
+    return res.status(200).json({ message: 'No new correct answers to record.' });
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  try {
+    // We now filter by date AND user ID from the token
+    const result = await Submission.findOneAndUpdate(
+      { date: today, user: req.user.id },
+      { $inc: { count: score }, $setOnInsert: { user: req.user.id } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json({ message: 'Submission recorded!', data: result });
+  } catch (error) {
+    res.status(500).json({ message: 'Error recording submission', error });
+  }
+});
+
+// GET route to fetch heatmap data (now protected)
+router.get('/data', authenticate, async (req, res) => {
+  try {
+    // We only find data for the logged-in user
+    const data = await Submission.find({ user: req.user.id });
+    const formattedData = data.map(item => ({
+      date: item.date.toISOString().split('T')[0],
+      count: item.count
+    }));
+    res.status(200).json(formattedData);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data', error });
+  }
+});
+
+
+
+
+
+
+
 
 // --- SET ROLE FOR USER (admin only) ---
 router.patch("/set-role/:userId", authenticate, requireRole("webappAdmin", "dean"), async (req, res) => {
