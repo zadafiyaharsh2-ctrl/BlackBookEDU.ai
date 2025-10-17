@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  userName: { 
+  userName: {
     type: String,
     required: true,
     unique: true,
@@ -59,8 +59,8 @@ const UserSchema = new mongoose.Schema({
   },
 
   // Social/Connections
-  connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // friends/following
-  achievements: [String], // badges, awards, etc.
+  connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], 
+  achievements: [String],
 
   // Privacy settings for profile visibility
   privacySettings: {
