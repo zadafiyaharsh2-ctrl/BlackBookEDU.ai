@@ -63,12 +63,12 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white font-sans">
+        <div className="min-h-screen bg-black text-white font-sans">
             <Navbar />
             <div className="container mx-auto p-4 sm:p-6 md:p-8">
 
                 {/* --- Main Profile Info Card --- */}
-                <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col md:flex-row items-center gap-6">
+                <div className="bg-zinc-900 p-6 rounded-lg shadow-xl flex flex-col md:flex-row items-center gap-6">
                     {/* Profile Picture */}
                     {user?.avatarUrl ? (
                         <img
