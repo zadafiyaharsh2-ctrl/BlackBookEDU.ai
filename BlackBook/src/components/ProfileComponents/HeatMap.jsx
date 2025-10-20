@@ -5,7 +5,7 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import { useAuth } from '../../utils/AuthContext';
 
 function DashboardPage() {
-    const { logout } = useAuth(); // <-- 2. Use the hook correctly
+    const { logout } = useAuth();
     const [answers, setAnswers] = useState({});
     const [heatmapData, setHeatmapData] = useState([]);
     const [message, setMessage] = useState('');
@@ -19,7 +19,7 @@ function DashboardPage() {
 
   const fetchHeatmapData = async () => {
     try {
-      // The auth header is now automatically added by our AuthContext!
+      
       const response = await api.get('/data');
       setHeatmapData(response.data);
     } catch (error) {
@@ -44,7 +44,7 @@ function DashboardPage() {
     try {
       const response = await api.post('/submit', answers);
       setMessage(response.data.message);
-      fetchHeatmapData(); // Refresh data
+      fetchHeatmapData(); 
     } catch (error) {
       setMessage('An error occurred. Please try again.');
       console.error("Error submitting answers", error);
