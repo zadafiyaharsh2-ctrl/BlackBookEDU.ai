@@ -164,3 +164,7 @@ vite.config.ts.timestamp-*
 
 utils\config.js
 package-lock.json
+
+
+# video files
+*.mp4

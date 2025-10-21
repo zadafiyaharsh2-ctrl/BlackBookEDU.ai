@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuth } from '../utils/AuthContext';
+// import { useAuth } from '../utils/AuthContext'; // <--- REMOVE THIS
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API || "http://localhost:9090",
@@ -22,6 +22,13 @@ function getUserRole() {
   }
 }
 
+// Helper function to log out and redirect
+function handleLogout() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('user'); // Also remove user info
+  window.location.href = '/login';
+}
+
 api.interceptors.response.use(
   r => r,
   async (err) => {
@@ -29,24 +36,25 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !original._retry) {
       original._retry = true;
 
-      // Only attempt /admin/token if user is admin
       const role = getUserRole();
+      
+      // Only attempt refresh if user is admin or student (as per your logic)
       if (role === 'admin' || role === "student") {
         try {
-          const { data } = await api.post('/admin/token');
+          // Assumes /admin/token uses the httpOnly cookie to refresh
+          const { data } = await api.post('/admin/token'); 
           localStorage.setItem('accessToken', data.accessToken);
-          useAuth(true);
-          return api(original);
-        } catch {
-          localStorage.removeItem('accessToken');
-          useAuth(false);
-          window.location.href = '/login';
+          // useAuth(true); // <--- REMOVE
+          return api(original); // Retry the original request with new token
+        }catch (refreshError) { // <--- The variable is defined here
+          // Refresh failed, force logout
+          console.error("Token refresh failed:", refreshError); // Log the actual error
+          handleLogout();
         }
       } else {
-        // For normal users, just log out and redirect
-        localStorage.removeItem('accessToken');
-        useAuth(false);
-        window.location.href = '/login';
+        // For other roles or guests, just log out and redirect
+        handleLogout();
+        // useAuth(false); // <--- REMOVE
       }
     }
     return Promise.reject(err);
