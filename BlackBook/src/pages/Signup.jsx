@@ -5,9 +5,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from '../utils/api'; 
 import { useCookies } from "react-cookie";
+// import { useAuth } from '../utils/AuthContext';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  // const { login } = useAuth();
   const [, setCookie] = useCookies(["token"]);
   const [form, setForm] = useState({
     userName: "",
@@ -41,6 +43,10 @@ const SignUp = () => {
       }
 
       if (form.password !== confirmPassword) {
+
+        // login(res.data.token);
+
+
         toast.error("Passwords do not match", {
           position: "top-right",
           autoClose: 3000,

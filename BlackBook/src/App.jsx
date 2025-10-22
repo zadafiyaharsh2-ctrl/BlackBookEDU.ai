@@ -5,7 +5,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Profile from './pages/AuthPages/Profile';
 // import Contact from './pages/Contact';
-import Dashboard from './pages/AuthPages/Dashboard';
+import Dashboard from './pages/AuthPages/StudentDashboard';
 import AI from './pages/AuthPages/AI';
 import Analytics from './pages/AuthPages/Analytics';
 import Problems from './pages/AuthPages/Problems';

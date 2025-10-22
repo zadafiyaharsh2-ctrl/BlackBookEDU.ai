@@ -7,6 +7,25 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
+
+
+/* client/src/index.css */
+@import 'react-calendar-heatmap/dist/styles.css';
+
+
+
+/* Custom colors for react-calendar-heatmap */
+.react-calendar-heatmap .color-scale-0 { @apply fill-green-200; }
+.react-calendar-heatmap .color-scale-1 { @apply fill-green-400; }
+.react-calendar-heatmap .color-scale-2 { @apply fill-green-600; }
+.react-calendar-heatmap .color-scale-3 { @apply fill-green-800; }
+.react-calendar-heatmap .color-scale-4 { @apply fill-green-900; }
+
+
+
+
+
  
 @layer utilities {
   /* For Firefox and modern browsers */

@@ -1,35 +1,60 @@
-import { createContext , useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import api from './api'; // Make sure this points to your configured Axios instance
 
+// 1. Create the context
+const AuthContext = createContext(null);
 
-// This makes a new React context called AuthContext
-const AuthContext = createContext();
-/**
- * It will later hold a reference to React’s setIsAuthenticated function.
- * This allows you to call setAuthFromOutside() from anywhere, even outside React components.
- */
-let externalSetAuth ;
-    // If externelSetAuth has been assigned, it will update authentication state.
-export function setAuthFromOutside(value) {
-    if(externalSetAuth) externalSetAuth(value);
-}
-    // the container function for app takes arg as children
+// 2. Create the provider component
 export function AuthProvider({ children }) {
-    // useState 
-    const [isAuthenticated, setIsAuthenticated] = useState(
-        // !!value is a neat trick in JavaScript to convert any value into a real boolean (true or false).
-        !!localStorage.getItem('accessToken')
-    );
-    // Stores the state updater function so setAuthFromOutside() can use it later.
-    externalSetAuth = setIsAuthenticated;
-    // Wraps all child components in AuthContext.Provider.
+    // Read the initial token from localStorage
+    const [token, setToken] = useState(localStorage.getItem('accessToken'));
+    const isAuthenticated = !!token;
+
+    // This effect runs whenever the token changes
+    useEffect(() => {
+        if (token) {
+            // Store token for persistence across page reloads
+            localStorage.setItem('accessToken', token);
+            // Set the default Authorization header for all future API requests
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } else {
+            // Remove token if it's null (e.g., on logout)
+            localStorage.removeItem('accessToken');
+            delete api.defaults.headers.common['Authorization'];
+        }
+    }, [token]);
+
+    // Centralized login function
+    const login = (newToken) => {
+        setToken(newToken);
+    };
+
+    // Centralized logout function
+    const logout = () => {
+        setToken(null);
+        // You can add a redirect here if needed, e.g., navigate('/login')
+    };
+
+    // The value provided to all consuming components
+    const value = {
+        token,
+        isAuthenticated,
+        login,
+        logout
+    };
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-    // Custom hook to use the context easily.
-export function useAuth(){
-    return useContext(AuthContext);
+// 3. Create the custom hook for easy consumption
+export function useAuth() {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 }
