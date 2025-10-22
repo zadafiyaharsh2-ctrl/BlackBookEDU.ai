@@ -38,7 +38,7 @@ const Pricing = () => {
             <h3 className="text-2xl font-bold mb-2">Free Version</h3>
             <p className="text-gray-400 mb-6">Get a taste of the platform.</p>
             <p className="text-4xl font-bold mb-6">
-              $0<span className="text-lg font-normal text-gray-400">/month</span>
+              Rs0<span className="text-lg font-normal text-gray-400">/month</span>
             </p>
             <ul className="space-y-3 mb-8 flex-1">
               {freeFeatures.map((feature) => (
@@ -72,7 +72,7 @@ const Pricing = () => {
               <h3 className="text-2xl font-bold mb-2">Premium</h3>
               <p className="text-gray-400 mb-6">Unlock your full potential.</p>
               <p className="text-4xl font-bold mb-6">
-                $9<span className="text-lg font-normal text-gray-400">/month</span>
+                Rs9<span className="text-lg font-normal text-gray-400">/month</span>
               </p>
               <ul className="space-y-3 mb-8 flex-1">
                 {paidFeatures.map((feature) => (

@@ -1,27 +1,60 @@
 import { React, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll'; // Import react-scroll Link
-import { Menu, X, LogIn, User } from 'lucide-react'; // Icons for page links
+import { NavLink, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
+import { Link as ScrollLink } from 'react-scroll';
+import { Menu, X, LogIn, User, LogOut } from 'lucide-react'; // 2. Import LogOut icon
 import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { useCookies } from 'react-cookie'; // 3. Import useCookies
 
-// Links that SCROLL on the homepage
+// Links that SCROLL on the homepage (No changes)
 const scrollNavItems = [
-  { label: 'Home', to: 'hero' }, // 'to' is the element ID
+  { label: 'Home', to: 'hero' },
   { label: 'Features', to: 'features' },
   { label: 'Testimonials', to: 'testimonials' },
   { label: 'Pricing', to: 'pricing' },
   { label: 'FAQ', to: 'faq' },
 ];
 
-// Links that go to other PAGES
-const pageNavItems = [
-  { label: 'Login', href: '/Login', icon: LogIn },
-  { label: 'Profile', href: '/Profile', icon: User },
-];
+// Links that go to other PAGES are now defined INSIDE the component
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleMobile = () => setMobileOpen(!mobileOpen);
+
+  // 4. Get cookie functions and navigation
+  const [cookies, , removeCookie] = useCookies(['token']);
+  const navigate = useNavigate();
+
+  // 5. Check for login status
+  const isLoggedIn = !!cookies.token;
+
+  // 6. Create the handleLogout function (from your example)
+  const handleLogout = () => {
+    // Remove cookie
+    removeCookie('token', { path: '/' });
+    // Also clear the raw document.cookie just in case
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    
+    // Remove from local storage
+    localStorage.removeItem('token');
+    
+    // Close mobile menu if open
+    if (mobileOpen) {
+      setMobileOpen(false);
+    }
+    
+    // Redirect the user to the login page
+    navigate('/login');
+  };
+
+  // 7. Define pageNavItems dynamically based on login state
+  const pageNavItems = isLoggedIn
+    ? [ // ---- LOGGED IN ----
+        { label: 'Profile', href: '/Profile', icon: User, type: 'navlink' },
+        { label: 'Logout', icon: LogOut, type: 'button', onClick: handleLogout },
+      ]
+    : [ // ---- LOGGED OUT ----
+        { label: 'Login', href: '/Login', icon: LogIn, type: 'navlink' },
+      ];
 
   // Common styles for desktop nav links
   const commonLinkClass =
@@ -33,59 +66,73 @@ const Navbar = () => {
         <div className='max-w-9xl mx-auto px-4'>
           <div className='flex justify-between items-center h-16'>
             
-            {/* Logo/Brand - now a ScrollLink to top */}
+            {/* Logo/Brand (No changes) */}
             <ScrollLink
               to="hero"
               spy={true}
               smooth={true}
-              offset={-80} // Adjust as needed for sticky nav height
+              offset={-80}
               duration={500}
               className='flex-shrink-0 cursor-pointer'
               onClick={() => setMobileOpen(false)}
             >
+              {/* NOTE: I see your project name from context, but I will use the one from your code */}
               <h1 className='text-2xl font-bold text-white'>BlackBookEDU</h1>
             </ScrollLink>
 
             {/* ------------ Desktop Navigation ------------------ */}
             <ul className='hidden md:flex items-center space-x-1'>
-              {/* --- Scroll Links --- */}
+              {/* --- Scroll Links (No changes) --- */}
               {scrollNavItems.map((item) => (
                 <li key={item.label}>
                   <ScrollLink
                     to={item.to}
                     spy={true}
                     smooth={true}
-                    offset={-80} // Offset for the sticky navbar height
+                    offset={-80}
                     duration={500}
                     className={`${commonLinkClass} text-gray-300 hover:bg-zinc-800 hover:text-white`}
-                    activeClass="!text-blue-400 bg-zinc-800" // Class for active scroll link
+                    activeClass="!text-blue-400 bg-zinc-800"
                   >
                     {item.label}
                   </ScrollLink>
                 </li>
               ))}
               
-              {/* --- Page Links --- */}
+              {/* --- Page Links (UPDATED) --- */}
+              {/* 8. Updated loop to handle both links and buttons */}
               {pageNavItems.map((item) => (
                 <li key={item.label}>
-                  <NavLink
-                    to={item.href}
-                    className={({ isActive }) =>
-                      `${commonLinkClass} ${
-                        isActive
-                          ? 'bg-zinc-800 text-blue-400'
-                          : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
-                      }`
-                    }
-                  >
-                    <item.icon className='w-5 h-5' />
-                    {item.label}
-                  </NavLink>
+                  {item.type === 'navlink' ? (
+                    // Render a NavLink
+                    <NavLink
+                      to={item.href}
+                      className={({ isActive }) =>
+                        `${commonLinkClass} ${
+                          isActive
+                            ? 'bg-zinc-800 text-blue-400'
+                            : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
+                        }`
+                      }
+                    >
+                      <item.icon className='w-5 h-5' />
+                      {item.label}
+                    </NavLink>
+                  ) : (
+                    // Render a Button for logout
+                    <button
+                      onClick={item.onClick}
+                      className={`${commonLinkClass} text-gray-300 hover:bg-zinc-800 hover:text-white`}
+                    >
+                      <item.icon className='w-5 h-5' />
+                      {item.label}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
 
-            {/* =============== Mobile Toggle Button =============== */}
+            {/* =============== Mobile Toggle Button =============== (No changes) */}
             <div className='flex md:hidden items-center'>
               <button
                 onClick={toggleMobile}
@@ -109,7 +156,7 @@ const Navbar = () => {
               transition={{ duration: 0.2, ease: 'easeInOut' }}
             >
               <ul className='flex flex-col gap-2 p-2'>
-                {/* --- Mobile Scroll Links --- */}
+                {/* --- Mobile Scroll Links (No changes) --- */}
                 {scrollNavItems.map((item) => (
                   <li key={item.label}>
                     <ScrollLink
@@ -120,7 +167,7 @@ const Navbar = () => {
                       duration={500}
                       className='flex items-center gap-3 w-full p-3 rounded-lg font-semibold text-gray-300 hover:bg-zinc-800 hover:text-white cursor-pointer'
                       activeClass="!bg-blue-600 !text-white"
-                      onClick={() => setMobileOpen(false)} // Close menu on click
+                      onClick={() => setMobileOpen(false)}
                     >
                       {item.label}
                     </ScrollLink>
@@ -130,23 +177,36 @@ const Navbar = () => {
                 {/* --- Separator --- */}
                 <hr className='border-zinc-700 my-2' />
                 
-                {/* --- Mobile Page Links --- */}
+                {/* --- Mobile Page Links (UPDATED) --- */}
+                {/* 9. Updated loop to handle both links and buttons */}
                 {pageNavItems.map((item) => (
                   <li key={item.label}>
-                    <NavLink
-                      to={item.href}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 w-full p-3 rounded-lg font-semibold transition-colors duration-200 ${
-                          isActive
-                            ? 'bg-blue-600 text-white'
-                            : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
-                        }`
-                      }
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      <item.icon className='w-5 h-5' />
-                      {item.label}
-                    </NavLink>
+                    {item.type === 'navlink' ? (
+                      // Render a NavLink
+                      <NavLink
+                        to={item.href}
+                        className={({ isActive }) =>
+                          `flex items-center gap-3 w-full p-3 rounded-lg font-semibold transition-colors duration-200 ${
+                            isActive
+                              ? 'bg-blue-600 text-white'
+                              : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
+                          }`
+                        }
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <item.icon className='w-5 h-5' />
+                        {item.label}
+                      </NavLink>
+                    ) : (
+                      // Render a Button for logout
+                      <button
+                        onClick={item.onClick}
+                        className='flex items-center gap-3 w-full p-3 rounded-lg font-semibold text-gray-300 hover:bg-zinc-800 hover:text-white'
+                      >
+                        <item.icon className='w-5 h-5' />
+                        {item.label}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
