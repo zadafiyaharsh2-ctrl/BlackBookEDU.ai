@@ -4,6 +4,7 @@ import Navbar from '../../components/AuthComponents/Navbar';
 const Dashboard = () => {
   return (
     <>
+       <div className="min-h-screen bg-black text-white font-sans">
       <Navbar />
     <div className='top-header '>
       <div className='grid grid-cols-3 gap-4 p-4 m-4 border rounded-lg shadow-md'>
@@ -28,7 +29,7 @@ const Dashboard = () => {
 
 
     </div>
-
+    </div>
 
 
     </>

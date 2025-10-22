@@ -5,9 +5,10 @@ const Problems = () => {
   return (
 
     <div>
+      <div className="min-h-screen bg-black text-white font-sans">
         <Navbar />
         <h1>Problems</h1>
-    </div>
+    </div></div>
   )
 }
 

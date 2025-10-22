@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 import { Link as ScrollLink } from 'react-scroll';
-import { Menu, X, LogIn, User, LogOut } from 'lucide-react'; // 2. Import LogOut icon
+import { Menu, X, LogIn, LayoutDashboard, LogOut } from 'lucide-react'; // 2. Import LogOut icon
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCookies } from 'react-cookie'; // 3. Import useCookies
 
@@ -49,7 +49,7 @@ const Navbar = () => {
   // 7. Define pageNavItems dynamically based on login state
   const pageNavItems = isLoggedIn
     ? [ // ---- LOGGED IN ----
-        { label: 'Profile', href: '/Profile', icon: User, type: 'navlink' },
+        { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, type: 'navlink' },
         { label: 'Logout', icon: LogOut, type: 'button', onClick: handleLogout },
       ]
     : [ // ---- LOGGED OUT ----

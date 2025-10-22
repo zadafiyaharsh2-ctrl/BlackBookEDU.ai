@@ -6,6 +6,7 @@ import api from '../utils/api';
 import { useCookies } from 'react-cookie';
 // import { useAuth } from '../utils/AuthContext';
 
+
 const Login = () => {
   const navigate = useNavigate();
   // const { login } = useAuth();
@@ -49,7 +50,7 @@ const Login = () => {
 
           
     setCookie("token", res.data.token, {
-          path: "/",
+          path: "/dashboard",
           expires: expirationDate,
           secure: window.location.protocol === 'https:',
           sameSite: 'strict'
@@ -62,10 +63,10 @@ const Login = () => {
           theme: "colored",
         });
 
-        // Redirect to home page
+        // Redirect to dashboard page
         setTimeout(() => {
-          navigate("/");
-        }, 1500);
+          navigate("/dashboard");
+        }, 0);
       } else {
         const errorMsg = res.data?.message || "Login failed";
         toast.error(errorMsg, {
