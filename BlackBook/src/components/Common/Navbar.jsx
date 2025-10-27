@@ -5,7 +5,6 @@ import { Menu, X, LogIn, LayoutDashboard, LogOut } from 'lucide-react'; // 2. Im
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCookies } from 'react-cookie'; // 3. Import useCookies
 
-// Links that SCROLL on the homepage (No changes)
 const scrollNavItems = [
   { label: 'Home', to: 'hero' },
   { label: 'Features', to: 'features' },
@@ -14,24 +13,23 @@ const scrollNavItems = [
   { label: 'FAQ', to: 'faq' },
 ];
 
-// Links that go to other PAGES are now defined INSIDE the component
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleMobile = () => setMobileOpen(!mobileOpen);
 
-  // 4. Get cookie functions and navigation
+  //  Get cookie functions and navigation
   const [cookies, , removeCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  // 5. Check for login status
+  //  Check for login status
   const isLoggedIn = !!cookies.token;
 
-  // 6. Create the handleLogout function (from your example)
+  // Create the handleLogout function 
   const handleLogout = () => {
     // Remove cookie
     removeCookie('token', { path: '/' });
-    // Also clear the raw document.cookie just in case
+    // Also clear the raw document.cookie 
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     
     // Remove from local storage
@@ -66,7 +64,7 @@ const Navbar = () => {
         <div className='max-w-9xl mx-auto px-4'>
           <div className='flex justify-between items-center h-16'>
             
-            {/* Logo/Brand (No changes) */}
+            {/* Logo/Brand*/}
             <ScrollLink
               to="hero"
               spy={true}
@@ -76,13 +74,12 @@ const Navbar = () => {
               className='flex-shrink-0 cursor-pointer'
               onClick={() => setMobileOpen(false)}
             >
-              {/* NOTE: I see your project name from context, but I will use the one from your code */}
               <h1 className='text-2xl font-bold text-white'>BlackBookEDU</h1>
             </ScrollLink>
 
             {/* ------------ Desktop Navigation ------------------ */}
             <ul className='hidden md:flex items-center space-x-1'>
-              {/* --- Scroll Links (No changes) --- */}
+              {/* --- Scroll Links  --- */}
               {scrollNavItems.map((item) => (
                 <li key={item.label}>
                   <ScrollLink
@@ -99,7 +96,7 @@ const Navbar = () => {
                 </li>
               ))}
               
-              {/* --- Page Links (UPDATED) --- */}
+              {/* --- Page Links  --- */}
               {/* 8. Updated loop to handle both links and buttons */}
               {pageNavItems.map((item) => (
                 <li key={item.label}>
@@ -177,7 +174,7 @@ const Navbar = () => {
                 {/* --- Separator --- */}
                 <hr className='border-zinc-700 my-2' />
                 
-                {/* --- Mobile Page Links (UPDATED) --- */}
+                {/* --- Mobile Page Links --- */}
                 {/* 9. Updated loop to handle both links and buttons */}
                 {pageNavItems.map((item) => (
                   <li key={item.label}>

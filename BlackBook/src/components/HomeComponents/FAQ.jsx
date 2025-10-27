@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-// Reusable Accordion Item Component
 const AccordionItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +30,7 @@ const AccordionItem = ({ question, answer }) => {
   );
 };
 
-// FAQ Data
+// FAQ  Mock Data 
 const faqs = [
   {
     question: 'How does the AI know my weak topics?',
