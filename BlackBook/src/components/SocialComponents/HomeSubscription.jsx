@@ -1,7 +1,6 @@
-
 import React from 'react'
 
-const SocialAddPost = () => {
+const HomeSubscription = () => {
   return (
     <div>
       
@@ -9,4 +8,4 @@ const SocialAddPost = () => {
   )
 }
 
-export default SocialAddPost
+export default HomeSubscription

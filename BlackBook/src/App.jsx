@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div>
       <Router>
-        {cookie.token ? (
+      
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
@@ -36,14 +36,7 @@ const App = () => {
                 <Route path='/Social' element={<Social />} />
                 <Route path="*" element={<Home />} />
               </Routes>
-            ) : (
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="*" element={<Navigate to="/login" />} />
-              </Routes>
-            )}
+            
       </Router>
     </div>
   )
