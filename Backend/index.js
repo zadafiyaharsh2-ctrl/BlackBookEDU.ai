@@ -115,4 +115,27 @@ passport.use('admin-jwt', new JwtStrategy(opts, async (jwt_payload, done) => {
 
 app.get( "/" , (req, res) => res.send( " Can you see me?" ) );
 app.use(authRoutes);
+
+// Previously added feature routes (if you already have them, keep them)
+app.use('/dashboard', require('./routes/dashboard'));
+app.use('/problems', require('./routes/problems'));
+app.use('/analytics', require('./routes/analytics'));
+app.use('/social', require('./routes/social'));
+app.use('/playground', require('./routes/playground'));
+app.use('/settings', require('./routes/settings'));
+app.use('/notifications', require('./routes/notifications'));
+app.use('/admin', require('./routes/AdminAuth'));
+
+// NEW mounts for images 9–12 features
+app.use('/subscriptions', require('./routes/subscriptions')); // pricing/plan access
+app.use('/catalog', require('./routes/catalog'));             // exam → subject tree
+app.use('/ai', require('./routes/ai'));                       // premium AI sessions
+app.use('/practice', require('./routes/practice'));           // topic/level attempts
+app.use('/progress', require('./routes/progress'));           // analytics summary
+app.use('/leaderboard', require('./routes/leaderboard'));     // class/institute/world
+app.use('/friends', require('./routes/friends'));             // search/list
+app.use('/organizations', require('./routes/organizations')); // join by school code
+app.use('/content', require('./routes/content'));             // paid content
+app.use('/teacher', require('./routes/teacher'));             // teacher verification
+
 app.listen( port , () => console.log("App is running on port http://localhost:" + port));
