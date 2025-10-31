@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const organizationSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
+  code: { type: String, unique: true, sparse: true }, // school code for join flow
   address: String,
   logo: String,
   contactEmail: String,
