@@ -137,5 +137,7 @@ app.use('/friends', require('./routes/friends'));             // search/list
 app.use('/organizations', require('./routes/organisations')); // join by school code
 app.use('/content', require('./routes/content'));             // paid content
 app.use('/teacher', require('./routes/teacher'));             // teacher verification
+app.use('/goals', require('./routes/goals'));                 // /goals CRUD
 
+/// ======================= SERVER ======================
 app.listen( port , () => console.log("App is running on port http://localhost:" + port));
