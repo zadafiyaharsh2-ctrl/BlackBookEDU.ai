@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 const Progress = require('../models/Progress');
 
 // Summary for charts; filter by exam/subject

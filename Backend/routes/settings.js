@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 const User = require('../models/User');
 
 // GET /settings -> return profile settings snapshot

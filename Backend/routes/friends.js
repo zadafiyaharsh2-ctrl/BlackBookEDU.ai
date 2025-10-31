@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 
 // Search by name with filters
 router.get('/search', authenticate, async (req, res) => {

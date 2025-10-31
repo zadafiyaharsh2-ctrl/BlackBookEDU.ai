@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 
 // Class leaderboard
 router.get('/class', authenticate, async (req, res) => {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, requireRole } = require('../utils/auth');
+const { authenticate, requireRole } = require('../utils/authentication');
 const { requirePlanTier } = require('../utils/subscription');
 const PaidContent = require('../models/PaidContent');
 const ContentPurchase = require('../models/ContentPurchase');

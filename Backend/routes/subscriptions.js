@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 const Plan = require('../models/Plan');
 const Payment = require('../models/Payment');
 const User = require('../models/User');

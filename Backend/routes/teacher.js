@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, requireRole } = require('../utils/auth');
+const { authenticate, requireRole } = require('../utils/authentication');
 const TeacherApplication = require('../models/TeacherApplication');
 
 // Submit application
