@@ -21,13 +21,14 @@ import SocialSubscription from "./pages/AuthPages/SocialSubscription";
 import SocialAddPost from "./pages/AuthPages/SocialAddPost";
 import StudentDashboard from "./pages/AuthPages/StudentDashboard";
 
+
 const App = () => {
   const [cookie , ] = useCookies(["token"]);
 
   return (
     <div>
       <Router>
-      
+        {cookie.token ? (
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
@@ -40,15 +41,21 @@ const App = () => {
                 <Route path='/Playground' element={<Playground />} />
                 <Route path='/Social' element={<Social />} />
                 <Route path="*" element={<Home />} />
-                 
-        <Route path="/Social/notifications" element={<SocialNotification />} />
-        <Route path="/Social/messages" element={<SocialMessage />} />
-        <Route path="/Social/subscriptions" element={<SocialSubscription />} />
-        <Route path="/Social/earnings" element={<SocialMyEarning />} />
-        <Route path="/Social/add-post" element={<SocialAddPost />} />
-        <Route path="/Student/dashboard" element={<StudentDashboard />} />
+                <Route path="/Social/notifications" element={<SocialNotification />} />
+                <Route path="/Social/messages" element={<SocialMessage />} />
+                <Route path="/Social/subscriptions" element={<SocialSubscription />} />
+                <Route path="/Social/earnings" element={<SocialMyEarning />} />
+                <Route path="/Social/add-post" element={<SocialAddPost />} />
+                <Route path="/Student/dashboard" element={<StudentDashboard />} />
               </Routes>
-            
+            ) : (
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="*" element={<Navigate to="/login" />} />
+              </Routes>
+            )}
       </Router>
     </div>
   )
