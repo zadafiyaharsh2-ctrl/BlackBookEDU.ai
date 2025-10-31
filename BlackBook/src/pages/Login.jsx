@@ -45,17 +45,19 @@ const Login = () => {
 
         // login(res.data.token);
 
-          const expirationDate = new Date();
-          expirationDate.setDate(expirationDate.getDate() + 30);
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 30);
 
-          
-    setCookie("token", res.data.token, {
-          path: "/dashboard",
-          expires: expirationDate,
-          secure: window.location.protocol === 'https:',
-          sameSite: 'strict'
-        });
-        localStorage.setItem("accessToken", res.data.token);
+      setCookie("token", res.data.token, {
+        path: "/", // <--- make cookie available everywhere
+        expires: expirationDate, // persists for 30 days
+        secure: window.location.protocol === 'https:', // secure only for https
+        sameSite: 'lax', // prevents accidental clearing due to strict rules
+      });
+
+      // optional: keep in localStorage as backup
+      localStorage.setItem("accessToken", res.data.token);
+
 
         toast.success("Logged in successfully!", {
           position: "top-right",
