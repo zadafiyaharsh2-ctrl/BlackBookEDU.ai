@@ -47,7 +47,7 @@ const Hero = () => {
       <div className="w-full h-full flex items-center justify-center">
         <video
           // Removed: ref={videoRef}
-          src="demo.mp4"
+          src="demo-video.mp4"
           alt="BlackBook AI Demo Video"
           className="rounded-xl shadow-2xl shadow-blue-900/20 max-w-full h-auto object-contain"
           muted       // Muted is required for autoplay

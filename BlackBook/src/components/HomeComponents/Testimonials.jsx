@@ -16,6 +16,21 @@ const testimonials = [
     name: 'Anil Kumar',
     title: 'Parent',
   },
+  {
+    quote: "As a parent, the dashboard is a lifesaver. I can see exactly where my son is struggling and how much effort he's putting in, all without having to look over his shoulder.",
+    name: 'Anil Kumar',
+    title: 'Parent',
+  },
+  {
+    quote: "As a parent, the dashboard is a lifesaver. I can see exactly where my son is struggling and how much effort he's putting in, all without having to look over his shoulder.",
+    name: 'Anil Kumar',
+    title: 'Parent',
+  },
+  {
+    quote: "As a parent, the dashboard is a lifesaver. I can see exactly where my son is struggling and how much effort he's putting in, all without having to look over his shoulder.",
+    name: 'Anil Kumar',
+    title: 'Parent',
+  },
 ];
 
 const Testimonials = () => {
@@ -26,11 +41,11 @@ const Testimonials = () => {
           What Our Users Say
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex flex-row flex-nowrap overflow-x-auto">
           {testimonials.map((testimonial) => (
             <div 
               key={testimonial.name} 
-              className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 flex flex-col"
+              className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 flex flex-col flex-shrink-0 w-80 mr-8 last:mr-0"
             >
               <p className="text-lg text-gray-300 mb-6 italic flex-1">
                 "{testimonial.quote}"
