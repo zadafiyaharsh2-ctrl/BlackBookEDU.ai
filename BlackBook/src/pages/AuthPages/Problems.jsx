@@ -31,7 +31,30 @@ const Problems = () => {
     <div>
       <div className="min-h-screen bg-black text-white font-sans">
         <Navbar />
-        <h1 className='min-h-screen bg-gray-900'>Problems</h1>
+        <div className='bg-gray-900 p-8'>
+          <h1 className='text-3xl font-bold mb-6 text-white'>Problem List</h1>
+          {problems.length > 0 ? (
+            <ul className='space-y-4'>
+              {problems.map((problem) => (
+                <li
+                key={problem._id}
+                className='p-4 border border-gray-700 rounded-lg bg-gray-800'>
+
+                <p className='text-lg font-medium'>
+
+                {problem.question}
+                <br />
+                </p>
+                <p>Options: {problem.options.join(", ")}</p>
+                <p>Answer: {problem.answer}</p>
+                </li>
+                ))}
+                </ul>
+                ) : (
+                  <p className='text-gray-400'>No problems to display.</p>
+                  )}
+                  
+        </div>
     </div></div>
   )
 }
