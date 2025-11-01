@@ -28,25 +28,19 @@
 
  
 @layer utilities {
-  /* For Firefox and modern browsers */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: #4A5568 #2D3748; /* thumb color track color */
-  }
+ .no--scrollbar::-webkit-scrollbar{
+    display: none;
+ }
 
-  /* For Webkit-based browsers (Chrome, Safari, Edge) */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #2D3748; /* A dark gray that matches gray-800 */
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #4A5568; /* A lighter gray that matches gray-600 */
-    border-radius: 10px;
-    border: 2px solid #2D3748;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #718096; /* A hover color matching gray-500 */
-  }
+ .no-scrollbar {
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+ }
+
+
 }
+
+
+
+
+

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../utils/auth');
+const { authenticate } = require('../utils/authentication');
 const Goal = require('../models/Goal');
 
 // List goals (optionally filter by scope)
