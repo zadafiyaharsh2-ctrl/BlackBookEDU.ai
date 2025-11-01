@@ -18,6 +18,7 @@ const posts = [
     content: "React + Tailwind combo is pure magic ✨",
     image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
   },
+  
 ];
 
 const HomeFeed = () => {

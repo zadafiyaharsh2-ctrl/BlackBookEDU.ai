@@ -37,7 +37,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className='sticky top-0 z-50 w-full bg-zinc-900/80 shadow-lg backdrop-blur-md'>
+      <nav className='sticky top-0 z-50 w-full bg-black shadow-lg backdrop-blur-md'>
         <div className='max-w-9xl mx-auto px-4'>
           <div className='flex justify-between items-center h-16'>
             {/* Logo/Brand */}
