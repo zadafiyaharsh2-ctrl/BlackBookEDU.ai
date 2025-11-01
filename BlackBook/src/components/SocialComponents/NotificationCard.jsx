@@ -25,10 +25,17 @@ const NotificationCard = () => {
       time: "1d ago",
       icon: <UserPlus className="text-green-400" size={18} />,
     },
+    {
+      id: 3,
+      user: "Rohan Patel",
+      action: "started following you",
+      time: "1d ago",
+      icon: <UserPlus className="text-green-400" size={18} />,
+    },
   ];
 
   return (
-    <div className="bg-[#1E1E1E] rounded-2xl shadow p-5 text-white">
+    <div className="bg-[#1E1E1E] rounded-2xl p-4 text-white">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
         <Bell className="text-yellow-400" /> Notifications
       </h2>
