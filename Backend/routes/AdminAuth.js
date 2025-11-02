@@ -76,6 +76,20 @@ router.get('/departments', authenticate, requireRole('webappAdmin', 'dean', 'hod
 });
 
 
+router.get('/departments/:id', authenticate, requireRole('webappAdmin', 'dean', 'hod'), async (req, res) => {
+  const dept = await Department.findById(req.params.id).populate('organization', 'name code');
+  if (!dept) return res.status(404).json({ message: 'Department not found.' });
+  res.json({ ok: true, department: dept });
+});
+
+
+router.delete('/departments/:id', authenticate, requireRole('webappAdmin', 'dean'), async (req, res) => {
+  const deleted = await Department.findByIdAndDelete(req.params.id);
+  if (!deleted) return res.status(404).json({ message: 'Department not found.' });
+  res.json({ ok: true, message: 'Department deleted.' });
+});
+
+
 
 
 
