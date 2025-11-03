@@ -1,39 +1,50 @@
-import React from 'react'
-import Navbar from '../../components/AuthComponents/Navbar';
+// src/pages/Dashboard.js
+import React from 'react';
+import Navbar from '../../components/AuthComponents/Navbar'; // Adjust path as needed
+
+// Import all the new Dashboard-specific components
+import ProfileCard from '../../components/DashboardComponents/ProfileCard';
+import CoursesOverview from '../../components/DashboardComponents/CoursesOverview';
+import TestPerformance from '../../components/DashboardComponents/TestPerformance';
+import UpcomingTests from '../../components/DashboardComponents/UpcomingTests';
+import TopicsToImprove from '../../components/DashboardComponents/TopicsToImprove';
+import RecommendedCourses from '../../components/DashboardComponents/RecommendedCourses';
+import CalendarCard from '../../components/DashboardComponents/CalendarCard';
+import InterestedTopics from '../../components/DashboardComponents/InterestedTopics';
 
 const Dashboard = () => {
   return (
     <>
-       <div className="min-h-screen bg-black text-white font-sans">
-      <Navbar />
-    <div className='top-header '>
-      <div className='grid grid-cols-3 gap-4 p-4 m-4 border rounded-lg shadow-md'>
-      <div className='bg-blue-600'>Name of Student</div>
-      <div className='bg-green-500'>Name of Student</div>
-      <div className='bg-red-500'>Name of Student</div>
-    </div>
-    <div className='grid grid-cols-2 gap-4 p-4 m-4 border rounded-lg shadow-md'>
-      <div className='bg-orange-300'>School Ranking Change</div>
-      <div className='bg-yellow-200'>Your Next Competitor</div>
+      {/* Set the background and font for the entire page */}
+      <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-6 lg:p-8">
+        <Navbar />
+        <div className='mt-8 mx-12'>
+            <ProfileCard /> {/* This now includes CalendarCard internally */}
+
+        </div>
+
+        {/* Main Dashboard Grid: Two columns */}
+        <div className="mt-8 grid grid-cols-12 lg:grid-cols-2 gap-6 mx-12">
+          
+          {/* LEFT COLUMN: Wider (e.g., span 8/12 columns) */}
+          <div className="lg:col-span-8 space-y-6">
+            <CalendarCard/>
+            <CoursesOverview />
+            <TestPerformance />
+            <UpcomingTests />
+          </div>
+
+          {/* RIGHT COLUMN: Narrower (e.g., span 4/12 columns) */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* CalendarCard is now part of ProfileCard */}
+            <TopicsToImprove />
+            <RecommendedCourses />
+          </div>
+
+        </div>
       </div>
-    </div>
-
-    <div className='select-section grid grid-cols-3 gap-4 p-4 m-4 border rounded-lg shadow-md'>
-      <div className='bg-purple-300'>Select Option 1</div>
-      <div className='bg-pink-200'>Select Option 2</div>
-      <div className='bg-indigo-400'>Select Option 3</div>
-    </div>
-
-    <div className='stats'>
-      
-
-
-    </div>
-    </div>
-
-
     </>
-)
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

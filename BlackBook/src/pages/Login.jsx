@@ -125,7 +125,7 @@ const Login = () => {
 
 
      {/* Left Panel (Hidden on mobile) */}
-      <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8">
+      <div className="w-1/2 hidden md:flex flex-col justify-center items-center bg-zinc-900 to-purple-600 text-white p-8">
         
         <div className="mb-8 flex flex-col items-center">
           <img src="logo.svg" alt="BlackBookEdu" className="h-12 mb-4" />
