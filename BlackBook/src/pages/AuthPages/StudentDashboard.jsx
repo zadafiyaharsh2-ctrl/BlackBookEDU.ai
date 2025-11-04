@@ -16,8 +16,8 @@ const Dashboard = () => {
   return (
     <>
       {/* Set the background and font for the entire page */}
-      <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-6 lg:p-8">
         <Navbar />
+      <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-6 lg:p-8">
         <div className='mt-8 mx-12'>
             <ProfileCard /> {/* This now includes CalendarCard internally */}
 

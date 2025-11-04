@@ -121,7 +121,6 @@ const SignUp = () => {
   };
 
   return (
-  <>
     <div className="min-h-screen flex">
 
         {/* Back Button */}
@@ -193,7 +192,7 @@ const SignUp = () => {
                   value={form.userName}
                   onChange={handleChange}
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                  placeholder="Full Name"
+                  placeholder="User Name"
                 />
               </div>
               <div>
@@ -279,7 +278,6 @@ const SignUp = () => {
         </div>
       </div>
     </div>
-  </>
 );
 
 };
