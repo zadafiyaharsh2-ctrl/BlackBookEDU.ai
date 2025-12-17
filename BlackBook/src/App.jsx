@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import Profile from './pages/AuthPages/Profile';
 // import Contact from './pages/Contact';
 import Dashboard from './pages/AuthPages/StudentDashboard';
-import AI from './pages/AuthPages/AI';
+import AI from './pages/AuthPages/AskAI';
 import Analytics from './pages/AuthPages/Analytics';
 import Problems from './pages/AuthPages/Problems';
 import Settings from './pages/AuthPages/Settings';
@@ -34,7 +34,7 @@ const App = () => {
                 <Route path="/profile" element={<Profile />} />
                 {/* <Route path='/Contact' element={<Contact />} /> */}
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path='/AI' element={<AI />} />
+                <Route path='/AskAI' element={<AI />} />
                 <Route path='/Analytics' element={<Analytics />} />
                 <Route path='/Problems' element={<Problems />} />
                 <Route path='/Settings' element={<Settings />} />

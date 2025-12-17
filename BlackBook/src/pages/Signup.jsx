@@ -142,8 +142,8 @@ const SignUp = () => {
         
         // Redirect to login page
         setTimeout(() => {
-          navigate("/");
-        }, 2000);
+          navigate("/dashboard");
+        }, 0);
       } 
       
       // else {
@@ -357,7 +357,7 @@ const SignUp = () => {
                 <button type="submit" disabled={loading} className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                   {loading ? "Verifying..." : "Verify & Sign Up"}
                 </button>
-                <button type="button" onClick={() => setStep(1)} className="text-sm text-gray-500 hover:underline">
+                <button type="button" onClick={() => setStep(1)} className="text-sm text-gray-500 hover:underline cursor-pointer">
                   Edit email / Go back
                 </button>
               </div>
