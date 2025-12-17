@@ -4,8 +4,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Contact = require("../models/Contact");
+const Otp = require("../models/Otp")
+const nodemailer = require("nodemailer");
 const multer = require('multer');
 
+require('dotenv').config();
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -55,9 +58,63 @@ function authenticate(req, res, next) {
   }
 }
 
+
+
+router.post("/send-otp", async(req, res) => {
+  const { email } = req.body;
+  if(!email) return res.status(400).json({message:"Email is required."});
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return res.status(409).json({ message: "Email already registered."});
+
+  //generate 6 digit
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashedOtp = await bcrypt.hash(otp, 10);
+
+  // save & update in collection
+  await Otp.findOneAndUpdate({ email }, { otp: hashedOtp }, { upsert: true });
+
+  //send email
+  try{
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { 
+        user: process.env.EMAIL_USER,
+        pass:  process.env.EMAIL_PASS 
+      }
+    });
+    await transporter.sendMail({
+      from: '"Study Platform" <noreply@study.com>',
+      to: email,
+      subject: "Your Verification Code",
+      text: `Your OTP is ${otp}. It expires in 5 minutes.`
+    });
+    res.status(200).json({ success: true, message: "OTP sent to email." });
+  } catch(err){
+    res.status(500).json({ message: "Failed to send email." });
+    console.error("Email error:",err);
+  }
+});
+
+
 // --- SIGNUP ---
 router.post("/register", async (req, res) => {
-  let { userName,  email, phone, password, role, institutionId, departmentId } = req.body;
+  let { userName,  email, phone, password, role, institutionId, departmentId, otp } = req.body;
+
+  // validation
+  if( !email || !password || !otp) return res.status(400).json({ message: "missing field."});
+
+  // verify otp
+  const otpRecord = await Otp.findOne({ email });
+  if (!otpRecord) return res.status(400).json({ message: "OTP expired or not requested." });
+
+  const isOtpValid = await bcrypt.compare(otp, otpRecord.otp);
+  if (!isOtpValid) return res.status(400).json({ message: "Invalid OTP." });
+
+
+  // If valid, delete the OTP record so it can't be reused
+  await Otp.deleteOne({ email });
+
   if (!userName  || !email || !password)
     return res.status(400).json({ message: "Missing required fields." });
 

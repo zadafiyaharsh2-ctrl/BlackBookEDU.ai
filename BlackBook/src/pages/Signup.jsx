@@ -11,6 +11,11 @@ const SignUp = () => {
   const navigate = useNavigate();
   // const { login } = useAuth();
   const [, setCookie] = useCookies(["token"]);
+
+
+  const [step, setStep ] = useState(1);
+  const [otp , setOtp ] = useState("");
+
   const [form, setForm] = useState({
     userName: "",
     email: "",
@@ -24,7 +29,50 @@ const SignUp = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };  
+
+  const handleRequestOtp = async(e) => {
+    e.preventDefault();
+    if(form.password !== confirmPassword ) {
+      return toast.error("Passwords do not match");
+    }
+
+    setLoading(true);
+    try {
+      const res = await api.post("/send-otp", { email: form.email });
+      if(res.data.success){
+        toast.success("Verification code sent to email");
+        setStep(2);
+        console.log("moved to step 2")
+      }
+    }catch(error){
+      toast.error(error.response?.data?.message || "Failed to send OTP");
+
+      console.log(error)
+    }finally {
+      setLoading(false);
+    }
   };
+
+
+  // const handleVerifyAndSignup = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   try {
+  //     const res = await api.post("/register", { ...form, otp });
+  //     if (res.data && res.data.success) {
+  //       // ... your existing cookie/token logic ...
+  //       localStorage.setItem('accessToken', res.data.token);
+  //       toast.success("Account verified and created!");
+  //       setTimeout(() => navigate("/"), 2000);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.message || "Invalid OTP");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +105,7 @@ const SignUp = () => {
       }
 
       // API call ko edit karlena
-      const res = await api.post("/register", form);
+      const res = await api.post("/register", { ...form, otp });
       
       if (res.data && res.data.success) {
       
@@ -75,46 +123,49 @@ const SignUp = () => {
     // Also store in localStorage for Authorization header-based flows
     localStorage.setItem('accessToken', res.data.token);
 
-        toast.success("Account created successfully!", {
+        toast.success("Account verified and created successfully!", {
           position: "top-right",
           autoClose: 3000,
           theme: "colored",
         });
         
         // Clear form
-        setForm({
-          userName: "",
-          email: "",
-          phone: "",
-          password: "",
-        });
-        setConfirmPassword("");
+        // setForm({
+        //   userName: "",
+        //   email: "",
+        //   phone: "",
+        //   password: "",
+        // });
+        // setConfirmPassword("");
 
         
         
         // Redirect to login page
         setTimeout(() => {
           navigate("/");
-        }, 3000);
-      } else {
-        const errorMsg = res.data?.message || "Signup failed";
-        toast.error(errorMsg, {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-        });
-      }
+        }, 2000);
+      } 
+      
+      // else {
+      //   const errorMsg = res.data?.message || "Signup failed";
+      //   toast.error(errorMsg, {
+      //     position: "top-right",
+      //     autoClose: 3000,
+      //     theme: "colored",
+      //   });
+      // }
     } catch (error) {
       console.error("SignUp error:", error);
-      const errorMsg = error.response?.data?.message || 
-                      error.message || 
-                      "Signup failed";
+      // const errorMsg = error.response?.data?.message || 
+      //                 error.message || 
+      //                 "Signup failed";
       
-      toast.error(errorMsg, {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "colored",
-      });
+      // toast.error(errorMsg, {
+      //   position: "top-right",
+      //   autoClose: 3000,
+      //   theme: "colored",
+      // });
+      toast.error(error.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -124,6 +175,8 @@ const SignUp = () => {
     <div className="min-h-screen flex">
 
         {/* Back Button */}
+
+      
       <div className='absolute top-4 left-4'>
         <button
               type="button"
@@ -177,9 +230,10 @@ const SignUp = () => {
             theme="colored"
           />
          
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
-            Create Your Account
+          {/* <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
+            { step === 1? "Created Your Account" : "Verify Your Email" }
           </h2>
+          
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
@@ -262,7 +316,56 @@ const SignUp = () => {
                 {loading ? "Signing Up..." : "Sign Up"}
               </button>
             </div>
-          </form>
+          </form> */}
+
+
+
+          <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
+            {step === 1 ? "Create Your Account" : "Verify Your Email"}
+          </h2>
+
+          {step === 1 ? (
+            /* STEP 1 FORM */
+            <form className="space-y-6" onSubmit={handleRequestOtp}>
+              <div className="rounded-md shadow-sm space-y-4">
+                <input name="userName" type="text" required value={form.userName} onChange={handleChange} placeholder="User Name" className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" />
+                <input name="email" type="email" required value={form.email} onChange={handleChange} placeholder="Email address" className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" />
+                <input name="phone" type="tel" required value={form.phone} onChange={handleChange} placeholder="Phone Number" className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" />
+                <input name="password" type="password" required value={form.password} onChange={handleChange} placeholder="Password" className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" />
+                <input name="confirmPassword" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" />
+              </div>
+              <button type="submit" disabled={loading} className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                {loading ? "Sending OTP..." : "Continue"}
+              </button>
+            </form>
+          ) : (
+            /* STEP 2 FORM: OTP INPUT */
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-4">We've sent a 6-digit code to <span className="font-bold">{form.email}</span></p>
+                <input 
+                  type="text" 
+                  maxLength="6"
+                  required
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="000000"
+                  className="appearance-none rounded-md relative block w-full px-3 py-4 border-2 border-green-500 text-center text-2xl tracking-[1em] focus:outline-none focus:ring-green-500 sm:text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <button type="submit" disabled={loading} className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                  {loading ? "Verifying..." : "Verify & Sign Up"}
+                </button>
+                <button type="button" onClick={() => setStep(1)} className="text-sm text-gray-500 hover:underline">
+                  Edit email / Go back
+                </button>
+              </div>
+            </form>
+          )}
+
+
+
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
