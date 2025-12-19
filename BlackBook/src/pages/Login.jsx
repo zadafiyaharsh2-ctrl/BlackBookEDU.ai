@@ -31,7 +31,7 @@ const Login = () => {
       if (!form.email || !form.password) {
         toast.error("Please fill all required fields", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 30000,
           theme: "colored",
         });
         setLoading(false);
@@ -61,7 +61,7 @@ const Login = () => {
 
         toast.success("Logged in successfully!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 30000,
           theme: "colored",
         });
 
@@ -73,7 +73,7 @@ const Login = () => {
         const errorMsg = res.data?.message || "Login failed";
         toast.error(errorMsg, {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 30000,
           theme: "colored",
         });
       }
@@ -85,7 +85,7 @@ const Login = () => {
       
       toast.error(errorMsg, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 30000,
         theme: "colored",
       });
     } finally {
