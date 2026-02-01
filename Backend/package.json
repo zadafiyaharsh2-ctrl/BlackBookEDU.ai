@@ -16,6 +16,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
+    "seed": "node seed.js",
+    "predev": "npm run seed",
+    "prestart": "npm run seed",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +26,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.11.0",
+    "csurf": "^1.2.2",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
