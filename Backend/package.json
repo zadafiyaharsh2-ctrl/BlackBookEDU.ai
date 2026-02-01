@@ -15,6 +15,10 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "seed": "node seed.js",
+    "predev": "npm run seed",
+    "dev": "nodemon index.js",
+    "prestart": "npm run seed",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,7 +26,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.11.0",
+    "csurf": "^1.2.2",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
@@ -32,6 +36,7 @@
     "mongoose": "^8.18.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
+    "nodemon": "^3.1.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
   }

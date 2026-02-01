@@ -20,7 +20,9 @@ const rateLimit = require('express-rate-limit');
 // app.use(express.json());
 
 // +======================== IMPORT OF MODELS ==========================
-// const User = require('./models/User');
+// NOTE: These were missing and caused runtime ReferenceError in Passport strategies
+const User = require('./models/User');
+const Admin = require('./models/Admin');
 
 
 // ========================== IMPORT OF ROUTES =========================
