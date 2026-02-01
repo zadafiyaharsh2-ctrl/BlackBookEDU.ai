@@ -15,9 +15,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
     "seed": "node seed.js",
     "predev": "npm run seed",
-    "dev": "nodemon index.js",
     "prestart": "npm run seed",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
