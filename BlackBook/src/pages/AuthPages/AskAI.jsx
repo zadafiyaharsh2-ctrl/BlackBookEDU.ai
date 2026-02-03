@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react'
+import axios from 'axios';
 import Navbar from '../../components/AuthComponents/Navbar';
 const AI = () => {
   const [messages, setMessages] = useState([{ role: 'assistant', content: 'Hello! How can I assist you today?' }]);
@@ -18,6 +19,7 @@ const AI = () => {
 
       const userMessage = { role: 'user', content: input};
       setMessages((prev) => [...prev, userMessage]); 
+      const currentInput = input;
       setInput('');
       setIsLoading(true);
       console.log(userMessage);
@@ -25,7 +27,22 @@ const AI = () => {
 
       // api fetching
      
-      
+      try {
+        const response = await axios.post('http://localhost:8000/query', {
+          query: currentInput,
+          top_k: 3
+        });
+
+        const aiResponse = {
+          role: "assistant",
+          content: response.data.answer
+        };
+        setMessages((prev) => [...prev, aiResponse]);
+      } catch (error){
+        console.error("Error fetching AI response:", error);
+      } finally {
+        setIsLoading(false);
+      }
 
     }
 
