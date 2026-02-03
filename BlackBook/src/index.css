@@ -9,6 +9,15 @@
 @tailwind utilities; */
 
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
 
 /* client/src/index.css */
 @import 'react-calendar-heatmap/dist/styles.css';

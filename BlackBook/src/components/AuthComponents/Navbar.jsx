@@ -20,7 +20,7 @@ const navItems = [
   { label: 'Dashboard', href: '/Dashboard', icon: LayoutDashboard },
   { label: 'Problems', href: '/Problems', icon: Puzzle },
   { label: 'Analytics', href: '/Analytics', icon: BarChart },
-  { label: 'Ask AI', href: '/Ai', icon: Sparkles },
+  { label: 'Ask AI', href: '/AskAI', icon: Sparkles },
   { label: 'Social', href: '/Social', icon: Users },
 ];
 
