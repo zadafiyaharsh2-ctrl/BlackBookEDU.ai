@@ -23,6 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "axios": "^1.13.4",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -35,9 +36,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
     "multer": "^2.0.2",
-    "nodemailer": "^7.0.11",
+    "nodemailer": "^7.0.13",
     "nodemon": "^3.1.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0"
   }
 }
