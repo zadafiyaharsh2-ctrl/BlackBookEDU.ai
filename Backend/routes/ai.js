@@ -29,37 +29,60 @@ const { requirePlanTier } = require('../utils/subscription');
 //   const { content } = req.body || {};
 //   res.status(201).json({ ok: true, message: { role: 'user', content }, response: 'AI response (stub)' });
 // });
-router.get('/query', async (req, res) => {
-  // res.json({ ok: true, message: 'AI query' });
-  console.log("AI query")
-})
 
+
+
+const ChatHistory = require('../models/chatHistory');
+
+router.get('/history', authenticate, async (req, res) => {
+  try {
+    const history = await ChatHistory.findOne({ userId: req.user.id });
+    res.json({ ok: true, messages: history ? history.messages : [] });
+  } catch (err) {
+    console.error("Error fetching chat history:", err);
+    res.status(500).json({ ok: false, message: "Failed to fetch chat history" });
+  }
+});
 
 router.post('/query', authenticate, async (req, res) => {
   const { query } = req.body;
+  const userId = req.user.id; 
+
+  if (!query) {
+    return res.status(400).json({ ok: false, message: "Query is required" });
+  }
 
   try {
-    // Attempt to forward to Python AI server
-    const response = await axios.post('http://localhost:8000/query', {
-      query: query,
-      top_k: 3
-    });
+    let chatHistory = await ChatHistory.findOne({ userId });
+    if (!chatHistory) {
+      chatHistory = new ChatHistory({ userId, messages: [] });
+    }
 
-    const aiResponse = {
-      role: "assistant",
-      content: response.data.answer
-    };
-    res.json({ ok: true, aiResponse });
+    const userMessage = { role: "user", content: query };
+    chatHistory.messages.push(userMessage);
+
+    let aiResponseContent = "";
+    try {
+      const response = await axios.post('http://localhost:8000/query', {
+        query: query,
+        top_k: 3
+      });
+      aiResponseContent = response.data.answer;
+    } catch (err) {
+      console.error("AI Server Error (Port 8000):", err.message);
+      aiResponseContent = "I am currently unable to reach the AI engine. This is a stub response.";
+    }
+
+    const aiMessage = { role: "assistant", content: aiResponseContent };
+    chatHistory.messages.push(aiMessage);
+
+    await chatHistory.save();
+
+    res.json({ ok: true, session: { id: chatHistory._id, messages: [aiMessage] }, aiResponse: aiMessage });
 
   } catch (err) {
-    console.error("AI Server Error (Port 8000):", err.message);
-
-    // Fallback stub if AI server is down
-    const aiResponse = {
-      role: "assistant",
-      content: "I am currently unable to reach the AI engine (Port 8000 is unavailable). This is a stub response."
-    };
-    res.json({ ok: true, aiResponse });
+    console.error("Error processing AI query:", err);
+    res.status(500).json({ ok: false, message: "Internal server error" });
   }
 });
 module.exports = router;

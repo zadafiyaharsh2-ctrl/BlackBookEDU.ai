@@ -12,6 +12,25 @@ const AI = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   })
 
+  // Fetch Chat History
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const { data } = await api.get('/ai/history');
+        if (data.ok && data.messages.length > 0) {
+          const formattedMessages = data.messages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }));
+          setMessages(formattedMessages);
+        }
+      } catch (error) {
+        console.error("Failed to load chat history:", error);
+      }
+    };
+    fetchHistory();
+  }, []);
+
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -24,8 +43,6 @@ const AI = () => {
     setIsLoading(true);
 
     try {
-      // Use the centralized 'api' utility which handles baseURL and Auth headers
-      // POST to /ai/query matches the backend route
       const { data } = await api.post('/ai/query', {
         query: currentInput
       });
